@@ -42,10 +42,10 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-/Library
-/Temp
-/Assembly-CSharp-vs.csproj
-/Assembly-CSharp.csproj
-/SPYTE.sln
-/SPYTE.userprefs
-/SPYTE-csharp.sln
+Library
+Temp
+Assembly-CSharp-vs.csproj
+Assembly-CSharp.csproj
+SPYTE.sln
+SPYTE.userprefs
+SPYTE-csharp.sln
