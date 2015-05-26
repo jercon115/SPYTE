@@ -5,7 +5,8 @@ public class Character : MonoBehaviour {
 
 	public enum Player {None, One, Two};
 	enum Direction {None, Left, Up, Right, Down};
-	enum Action {Wait, Move};
+	enum Action {Wait, Interact};
+	enum AIState {None, Go, Do};
 
 	public Player player;
 
@@ -23,6 +24,7 @@ public class Character : MonoBehaviour {
 
 	// AI variables
 	private Action currentAction;
+	private AIState currentState;
 	private Vector2 moveTo; // used for AI's, to move to a point
 	private int actionTimer;
 	private int moveTimer;
@@ -68,22 +70,22 @@ public class Character : MonoBehaviour {
 			currentMove = Direction.None;
 	}
 
+	void NPCNext() {
+		switch (Random.Range (0, 1)) {
+		case 0: // Wait at a random point
+			currentAction = Action.Wait;
+			currentState = AIState.Go;
+			moveTo = new Vector2 (Random.Range (-5.0f, 5.0f), Random.Range (-5.0f, 5.0f));
+			actionTimer = Random.Range (15, 180);
+			break;
+		}
+	}
+
 	void NPCAction() { 
 		if (actionTimer == 0) {
-			switch (Random.Range (0, 2)) {
-			case 0: // Move to a random point
-				currentAction = Action.Move;
-				moveTo = new Vector2 (Random.Range (-5.0f, 5.0f), Random.Range (-5.0f, 5.0f));
-				actionTimer = 1;
-				break;
-			case 1: // Wait
-				currentAction = Action.Wait;
-				actionTimer = Random.Range (15, 180);
-				break;
-			}
-		} else {
-			if (currentAction != Action.Move) actionTimer--;
-		}
+			currentState = AIState.None;
+		} else
+			actionTimer--;
 	}
 
 	void NPCMovement() {
@@ -119,8 +121,8 @@ public class Character : MonoBehaviour {
 
 			// IF NEITHER NEEDED, DONE
 			if (movX == 0 && movY == 0) {
-				actionTimer = 0; // Set up new action
 				moveTimer = 0;
+				currentState = AIState.Do;
 				return;
 			}
 
@@ -158,8 +160,17 @@ public class Character : MonoBehaviour {
 		if (player != Player.None) {
 			PlayerMovement ();
 		} else {
-			if (currentAction == Action.Move) NPCMovement ();
-			NPCAction();
+			switch(currentState) {
+			case AIState.None:
+				NPCNext ();
+				break;
+			case AIState.Go:
+				NPCMovement ();
+				break;
+			case AIState.Do:
+				NPCAction ();
+				break;
+			}
 		}
 
 		Rigidbody2D body = GetComponent<Rigidbody2D>();
