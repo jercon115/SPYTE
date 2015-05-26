@@ -9,7 +9,8 @@ public class Character : MonoBehaviour {
 	enum Move {None, Left, Up, Right, Down};
 	enum Action {None, Wait, Interact, Attack};
 	enum AIState {None, Go, Do};
-	
+
+	public GameManager gameMgr;
 	public Player player;
 	public Character enemy;
 	public CharacterManager charMgr;
@@ -25,6 +26,9 @@ public class Character : MonoBehaviour {
 	public GameObject legs;
 	public GameObject body;
 	public GameObject head;
+	public Sprite legSprite;
+	public Sprite bodySprite;
+	public Sprite headSprite;
 	private Animator legsAnimator;
 	private Animator bodyAnimator;
 	private Animator headAnimator;
@@ -71,7 +75,13 @@ public class Character : MonoBehaviour {
 		bodyAnimator.runtimeAnimatorController = bodyCont;;
 		headAnimator.runtimeAnimatorController = headCont;
 	}
-	
+
+	public void setSprites(Sprite legSpr, Sprite bodySpr, Sprite headSpr) {
+		legSprite = legSpr;
+		bodySprite = bodySpr;
+		headSprite = headSpr;
+	}
+
 	public void setColor(Color color) {
 		legs.GetComponent<SpriteRenderer> ().color = color;
 		body.GetComponent<SpriteRenderer> ().color = color;
@@ -106,6 +116,8 @@ public class Character : MonoBehaviour {
 					headAnimator.Play ("interact_right", -1, float.NegativeInfinity);
 				}
 			}
+
+			gameMgr.updateClues(interactObj, player);
 
 			pauseTimer = 30;
 		}
@@ -263,8 +275,6 @@ public class Character : MonoBehaviour {
 		
 		if (player != Player.None) {
 			PlayerMovement (); PlayerAction ();
-			if (player == Player.One)
-				print (currentMove);
 		} else {
 			switch(currentState) {
 			case AIState.None:

@@ -12,22 +12,25 @@ public class CharacterManager : MonoBehaviour {
 	public RuntimeAnimatorController[] legs;
 	public RuntimeAnimatorController[] bodies;
 	public RuntimeAnimatorController[] heads;
-
+	public Sprite[] legSprites;
+	public Sprite[] bodySprites;
+	public Sprite[] headSprites;
 
 	// Use this for initialization
 	void Start () {
 		List<Character> setCharacters = new List<Character>(characters);
 
-		foreach (RuntimeAnimatorController leg in legs) {
-			foreach (RuntimeAnimatorController body in bodies) {
-				foreach (RuntimeAnimatorController head in heads) {
-					int i = Random.Range (0, setCharacters.Count);
+		for (int i = 0; i < legs.Length; i++) {
+			for (int j = 0; j < bodies.Length; j++) {
+				for (int k = 0; k < heads.Length; k++) {
+					int c = Random.Range (0, setCharacters.Count);
 
-					setCharacters[i].setAppearance(leg, body, head);
+					setCharacters[c].setAppearance(legs[i], bodies[j], heads[k]);
+					setCharacters[c].setSprites(legSprites[i], bodySprites[j], headSprites[k]);
 
 					float x = Random.Range (-7.0f,7.0f); float y = Random.Range (-3.0f, 3.0f);
-					setCharacters[i].transform.localPosition = new Vector3(x, y, y);
-					setCharacters.RemoveAt (i);
+					setCharacters[c].transform.localPosition = new Vector3(x, y, y);
+					setCharacters.RemoveAt (c);
 				}
 			}
 		}
