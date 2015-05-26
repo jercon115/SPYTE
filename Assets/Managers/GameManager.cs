@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public enum Player {None, One, Two};
@@ -9,11 +10,28 @@ public class GameManager : MonoBehaviour {
 
 	public CharacterManager charMgr;
 
+	public Text MissionTimerText;
+	public Image MissionSprite;
+	public GameObject Mission;
+	public GameObject PlayerOneClues;
+	public GameObject PlayerTwoClues;
+
+	private Sprite[] CharacterSprites;
+	private Sprite PlayerOneHead;
+	private Sprite PlayerOneBody;
+	private Sprite PlayerOneLegs;
+	private Sprite PlayerTwoHead;
+	private Sprite PlayerTwoBody;
+	private Sprite PlayerTwoLegs;
+
+	private int MissionTimer;
 	private GameState gamestate;
 
 	// Use this for initialization
 	void Start () {
 		gamestate = GameState.WaitForOne;
+		
+		MissionTimer = 2400;
 	}
 	
 	// Update is called once per frame
@@ -34,6 +52,17 @@ public class GameManager : MonoBehaviour {
 				charMgr.revealPlayer (Player.None);
 				charMgr.unpauseAll();
 				break;
+			}
+		}
+
+		if (gamestate == GameState.Play) {
+			Debug.Log("TIMING");
+			if (MissionTimer > 0) {
+				MissionTimer--;
+				int MissionTimerSeconds = MissionTimer/40;
+				MissionTimerText.text = MissionTimerSeconds.ToString();
+			} else {
+				MissionTimer = 2400;
 			}
 		}
 	}
