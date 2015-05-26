@@ -4,6 +4,8 @@ using System.Collections.Generic;
 public class CharacterManager : MonoBehaviour {
 
 	public Character[] characters;
+	public Character One;
+	public Character Two;
 
 	public RuntimeAnimatorController[] legs;
 	public RuntimeAnimatorController[] bodies;
@@ -27,6 +29,30 @@ public class CharacterManager : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	public void revealPlayer(Player player) {
+		if (player == Player.None) {
+			foreach(Character character in characters)
+				character.setColor (new Color(1.0f, 1.0f, 1.0f, 1.0f));
+		} else
+			foreach(Character character in characters)
+				character.setColor (new Color(1.0f, 1.0f, 1.0f, 0.5f));
+
+		if (player == Player.One) {
+			One.setColor (new Color(1.0f, 1.0f, 1.0f, 1.0f));
+		} else
+			Two.setColor (new Color(1.0f, 1.0f, 1.0f, 1.0f));
+	}
+
+	public void pauseAll() {
+		foreach (Character character in characters)
+			character.setPaused (true);
+	}
+
+	public void unpauseAll() {
+		foreach (Character character in characters)
+			character.setPaused (false);
 	}
 	
 	// Update is called once per frame

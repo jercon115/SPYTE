@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 
 public class Character : MonoBehaviour {
-
-	public enum Player {None, One, Two};
 	enum Direction {None, Left, Up, Right, Down};
 	enum Action {Wait, Interact};
 	enum AIState {None, Go, Do};
@@ -29,6 +27,7 @@ public class Character : MonoBehaviour {
 	const float speed = 1.0f;
 	private List<Direction> movement; // 0: Left, 1: Up, 2: Right, 3: Down
 	private Direction currentMove;
+	private bool paused;
 
 	// AI variables
 	private Action currentAction;
@@ -39,6 +38,7 @@ public class Character : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
+		paused = true;
 		movement = new List<Direction>();
 		currentMove = Direction.None;
 
@@ -54,13 +54,20 @@ public class Character : MonoBehaviour {
 		headAnimator.Play("idle", -1, float.NegativeInfinity);
 	}
 
+	public void setPaused(bool newPaused) {
+		paused = newPaused;
+	}
+
 	public void setAppearance(RuntimeAnimatorController legsCont, RuntimeAnimatorController bodyCont, RuntimeAnimatorController headCont) {
-		print (legsCont);
 		legsAnimator.runtimeAnimatorController = legsCont;
-		print (bodyCont);
-		bodyAnimator.runtimeAnimatorController = bodyCont;
-		print (headCont);
+		bodyAnimator.runtimeAnimatorController = bodyCont;;
 		headAnimator.runtimeAnimatorController = headCont;
+	}
+
+	public void setColor(Color color) {
+		legs.GetComponent<SpriteRenderer> ().color = color;
+		body.GetComponent<SpriteRenderer> ().color = color;
+		head.GetComponent<SpriteRenderer> ().color = color;
 	}
 
 	private void PlayerMovement() {
@@ -179,6 +186,9 @@ public class Character : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if (paused)
+			return;
+
 		transform.Translate (new Vector3 (0.0f, 0.0f, transform.localPosition.y - transform.localPosition.z));
 
 		if (player != Player.None) {
