@@ -18,12 +18,12 @@ public class Character : MonoBehaviour {
 	public KeyCode attack;
 
 	// sprites
-	public GameObject head;
-	public GameObject body;
 	public GameObject legs;
-	private Animator headAnimator;
-	private Animator bodyAnimator;
+	public GameObject body;
+	public GameObject head;
 	private Animator legsAnimator;
+	private Animator bodyAnimator;
+	private Animator headAnimator;
 
 	// movement variables
 	const float speed = 1.0f;
@@ -46,12 +46,12 @@ public class Character : MonoBehaviour {
 		moveTo = transform.localPosition;
 		actionTimer = 0;
 
-		headAnimator = head.GetComponent<Animator>();
-		bodyAnimator = body.GetComponent<Animator>();
 		legsAnimator = legs.GetComponent<Animator>();
-		headAnimator.Play("idle", -1, float.NegativeInfinity);
-		bodyAnimator.Play("idle", -1, float.NegativeInfinity);
+		bodyAnimator = body.GetComponent<Animator>();
+		headAnimator = head.GetComponent<Animator>();
 		legsAnimator.Play ("idle", -1, float.NegativeInfinity);
+		bodyAnimator.Play("idle", -1, float.NegativeInfinity);
+		headAnimator.Play("idle", -1, float.NegativeInfinity);
 	}
 
 	void PlayerMovement() {
@@ -191,9 +191,9 @@ public class Character : MonoBehaviour {
 		Rigidbody2D body = GetComponent<Rigidbody2D>();
 
 		if (currentMove != Direction.None) {
-			headAnimator.Play ("walk", -1, float.NegativeInfinity);
-			bodyAnimator.Play ("walk", -1, float.NegativeInfinity);
 			legsAnimator.Play ("walk", -1, float.NegativeInfinity);
+			bodyAnimator.Play ("walk", -1, float.NegativeInfinity);
+			headAnimator.Play ("walk", -1, float.NegativeInfinity);
 		}
 		switch (currentMove) {
 		case Direction.Left:
@@ -212,9 +212,9 @@ public class Character : MonoBehaviour {
 			break;
 		default:
 			body.velocity = new Vector2 (0.0f, 0.0f);
-			headAnimator.Play ("head", -1, float.NegativeInfinity);
-			bodyAnimator.Play ("idle", -1, float.NegativeInfinity);
 			legsAnimator.Play ("idle", -1, float.NegativeInfinity);
+			bodyAnimator.Play ("idle", -1, float.NegativeInfinity);
+			headAnimator.Play ("head", -1, float.NegativeInfinity);
 			break;
 		}
 	}
