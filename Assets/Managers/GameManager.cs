@@ -37,4 +37,17 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 	}
+
+	public void SetSceneGame () {
+		Application.LoadLevel (0);
+		Debug.Log("Button was pressed");
+	}
+	
+	public void SetScenePlayer1Wins () {
+		Application.LoadLevel ("Player1Wins");
+	}
+	
+	public void SetScenePlayer2Wins () {
+		Application.LoadLevel ("Player2Wins");
+	}
 }

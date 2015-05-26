@@ -7,6 +7,7 @@ public class Character : MonoBehaviour {
 	enum AIState {None, Go, Do};
 
 	public Player player;
+	public Character enemy;
 
 	public KeyCode left;
 	public KeyCode right;
@@ -68,6 +69,26 @@ public class Character : MonoBehaviour {
 		legs.GetComponent<SpriteRenderer> ().color = color;
 		body.GetComponent<SpriteRenderer> ().color = color;
 		head.GetComponent<SpriteRenderer> ().color = color;
+	}
+
+	private void PlayerAttack() {
+		if (Input.GetKey (attack)) {
+			legsAnimator.Play ("interact_down", -1, float.NegativeInfinity);
+			bodyAnimator.Play("interact_down", -1, float.NegativeInfinity);
+			headAnimator.Play("interact_down", -1, float.NegativeInfinity);
+		}
+		if (Input.GetKeyDown (attack)) {
+			float dX = enemy.transform.localPosition.x - transform.localPosition.x;
+			float dY = enemy.transform.localPosition.y - transform.localPosition.y;
+			float dist = Mathf.Sqrt (dX*dX + dY*dY);
+			if (dist < 0.5) {
+				if (player == Player.One) {
+					Application.LoadLevel ("Player1Wins");
+				} else {
+					Application.LoadLevel ("Player2Wins");
+				}
+			}
+		}
 	}
 
 	private void PlayerMovement() {
@@ -192,7 +213,7 @@ public class Character : MonoBehaviour {
 		transform.Translate (new Vector3 (0.0f, 0.0f, transform.localPosition.y - transform.localPosition.z));
 
 		if (player != Player.None) {
-			PlayerMovement ();
+			PlayerMovement (); PlayerAttack ();
 		} else {
 			switch(currentState) {
 			case AIState.None:
@@ -231,9 +252,11 @@ public class Character : MonoBehaviour {
 			break;
 		default:
 			body.velocity = new Vector2 (0.0f, 0.0f);
-			legsAnimator.Play ("idle", -1, float.NegativeInfinity);
-			bodyAnimator.Play ("idle", -1, float.NegativeInfinity);
-			headAnimator.Play ("idle", -1, float.NegativeInfinity);
+			if (!Input.GetKey (attack)) {
+				legsAnimator.Play ("idle", -1, float.NegativeInfinity);
+				bodyAnimator.Play ("idle", -1, float.NegativeInfinity);
+				headAnimator.Play ("idle", -1, float.NegativeInfinity);
+			}
 			break;
 		}
 	}
