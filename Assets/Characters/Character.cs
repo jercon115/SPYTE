@@ -38,7 +38,7 @@ public class Character : MonoBehaviour {
 	private int moveTimer;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		movement = new List<Direction>();
 		currentMove = Direction.None;
 
@@ -54,7 +54,16 @@ public class Character : MonoBehaviour {
 		headAnimator.Play("idle", -1, float.NegativeInfinity);
 	}
 
-	void PlayerMovement() {
+	public void setAppearance(RuntimeAnimatorController legsCont, RuntimeAnimatorController bodyCont, RuntimeAnimatorController headCont) {
+		print (legsCont);
+		legsAnimator.runtimeAnimatorController = legsCont;
+		print (bodyCont);
+		bodyAnimator.runtimeAnimatorController = bodyCont;
+		print (headCont);
+		headAnimator.runtimeAnimatorController = headCont;
+	}
+
+	private void PlayerMovement() {
 		if (Input.GetKeyDown (left)) {
 			movement.Add (Direction.Left);
 		} else
@@ -85,25 +94,25 @@ public class Character : MonoBehaviour {
 			currentMove = Direction.None;
 	}
 
-	void NPCNext() {
+	private void NPCNext() {
 		switch (Random.Range (0, 1)) {
 		case 0: // Wait at a random point
 			currentAction = Action.Wait;
 			currentState = AIState.Go;
-			moveTo = new Vector2 (Random.Range (-5.0f, 5.0f), Random.Range (-5.0f, 5.0f));
+			moveTo = new Vector2 (Random.Range (-7.0f, 7.0f), Random.Range (-3.0f, 3.0f));
 			actionTimer = Random.Range (15, 180);
 			break;
 		}
 	}
 
-	void NPCAction() { 
+	private void NPCAction() { 
 		if (actionTimer == 0) {
 			currentState = AIState.None;
 		} else
 			actionTimer--;
 	}
 
-	void NPCMovement() {
+	private void NPCMovement() {
 		float distX = Mathf.Abs (moveTo.x - transform.localPosition.x);
 		float distY = Mathf.Abs (moveTo.y - transform.localPosition.y);
 
@@ -214,7 +223,7 @@ public class Character : MonoBehaviour {
 			body.velocity = new Vector2 (0.0f, 0.0f);
 			legsAnimator.Play ("idle", -1, float.NegativeInfinity);
 			bodyAnimator.Play ("idle", -1, float.NegativeInfinity);
-			headAnimator.Play ("head", -1, float.NegativeInfinity);
+			headAnimator.Play ("idle", -1, float.NegativeInfinity);
 			break;
 		}
 	}
