@@ -60,6 +60,11 @@ public class CharacterManager : MonoBehaviour {
 			character.setPaused (false);
 	}
 
+	public GameObject getRandomObject () {
+		int i = Random.Range (0, objects.Length);
+		return objects [i];
+	}
+
 	public GameObject getClosestObject(float x, float y, float radius) {
 		GameObject foundObj = null;
 

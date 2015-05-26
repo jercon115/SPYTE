@@ -45,6 +45,7 @@ public class Character : MonoBehaviour {
 	private Action nextAction;
 	private AIState currentState;
 	private Vector2 moveTo; // used for AI's, to move to a point
+	private float moveToRad; // stop when within certain distance of moveTo
 	private int moveTimer;
 	
 	// Use this for initialization
@@ -57,6 +58,7 @@ public class Character : MonoBehaviour {
 		nextAction = Action.None;
 		currentState = AIState.None;
 		moveTo = transform.localPosition;
+		moveToRad = speed / 30.0f;
 		
 		legsAnimator = legs.GetComponent<Animator>();
 		bodyAnimator = body.GetComponent<Animator>();
@@ -113,11 +115,11 @@ public class Character : MonoBehaviour {
 				} else {
 					legsAnimator.Play ("interact_up", -1, float.NegativeInfinity);
 					bodyAnimator.Play ("interact_up", -1, float.NegativeInfinity);
-					headAnimator.Play ("interact_right", -1, float.NegativeInfinity);
+					headAnimator.Play ("interact_up", -1, float.NegativeInfinity);
 				}
 			}
 
-			gameMgr.updateClues(interactObj, player);
+			if (player != Player.None) gameMgr.updateClues(interactObj, player);
 
 			pauseTimer = 30;
 		}
@@ -184,13 +186,21 @@ public class Character : MonoBehaviour {
 	}
 	
 	private void NPCNext() {
-		switch (Random.Range (0, 1)) {
+		switch (Random.Range (0, 2)) {
 		case 0: // Wait at a random point
 			nextAction = Action.Wait;
-			currentState = AIState.Go;
 			moveTo = new Vector2 (Random.Range (-7.0f, 7.0f), Random.Range (-3.0f, 3.0f));
+			moveToRad = speed / 30.0f;
+			break;
+		case 1: // Interact with random object
+			nextAction = Action.Interact;
+			GameObject interactObj = charMgr.getRandomObject();
+			moveTo = interactObj.transform.localPosition;
+			moveToRad = 0.5f;
 			break;
 		}
+
+		currentState = AIState.Go;
 	}
 	
 	private void NPCAction() { 
@@ -204,10 +214,10 @@ public class Character : MonoBehaviour {
 		
 		bool axisTargetReached = false;
 		
-		if (distX <= speed / 30.0f && (currentMove == Move.Left || currentMove == Move.Right))
+		if (distX <= moveToRad && (currentMove == Move.Left || currentMove == Move.Right))
 			axisTargetReached = true;
 		
-		if (distY <= speed / 30.0f && (currentMove == Move.Down || currentMove == Move.Up))
+		if (distY <= moveToRad && (currentMove == Move.Down || currentMove == Move.Up))
 			axisTargetReached = true;
 		
 		if (moveTimer == 0 || axisTargetReached) {
@@ -215,14 +225,14 @@ public class Character : MonoBehaviour {
 			currentMove = Move.None;
 			
 			// DETERMINE WHAT DIRECTIONS (OR NONE) IN EACH AXES IS REQUIRED
-			if (distX > speed / 30.0f) {
+			if (distX > moveToRad) {
 				if (moveTo.x > transform.localPosition.x) {
 					movX = 1; // target is to the right
 				} else
 					movX = -1; // otherwise it is to the left
 			}
 			
-			if (distY > speed / 30.0f) {
+			if (distY > moveToRad) {
 				if (moveTo.y > transform.localPosition.y) {
 					movY = 1; // target is to the above
 				} else
