@@ -13,16 +13,20 @@ public class GameManager : MonoBehaviour {
 	public Text MissionTimerText;
 	public Image MissionSprite;
 	public GameObject Mission;
-	public GameObject PlayerOneClues;
-	public GameObject PlayerTwoClues;
 
-	private Sprite[] CharacterSprites;
-	private Sprite PlayerOneHead;
-	private Sprite PlayerOneBody;
-	private Sprite PlayerOneLegs;
-	private Sprite PlayerTwoHead;
-	private Sprite PlayerTwoBody;
-	private Sprite PlayerTwoLegs;
+	public Sprite HeadBlack;
+	public Sprite HeadBlond;
+	public Sprite BodyRed;
+	public Sprite BodyBlue;
+	public Sprite LegsRed;
+	public Sprite LegsBlue;
+
+	public Image PlayerOneHead;
+	public Image PlayerOneBody;
+	public Image PlayerOneLegs;
+	public Image PlayerTwoHead;
+	public Image PlayerTwoBody;
+	public Image PlayerTwoLegs;
 
 	private int MissionTimer;
 	private GameState gamestate;
