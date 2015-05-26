@@ -2,20 +2,25 @@
 using System.Collections.Generic;
 
 public class Character : MonoBehaviour {
-	enum Direction {None, Left, Up, Right, Down};
-	enum Action {Wait, Interact};
-	enum AIState {None, Go, Do};
+	// constants
+	const float speed = 1.0f;
+	const float interactRad = 1.0f;
 
+	enum Move {None, Left, Up, Right, Down};
+	enum Action {None, Wait, Interact, Attack};
+	enum AIState {None, Go, Do};
+	
 	public Player player;
 	public Character enemy;
-
+	public CharacterManager charMgr;
+	
 	public KeyCode left;
 	public KeyCode right;
 	public KeyCode up;
 	public KeyCode down;
 	public KeyCode interact;
 	public KeyCode attack;
-
+	
 	// sprites
 	public GameObject legs;
 	public GameObject body;
@@ -23,30 +28,32 @@ public class Character : MonoBehaviour {
 	private Animator legsAnimator;
 	private Animator bodyAnimator;
 	private Animator headAnimator;
-
-	// movement variables
-	const float speed = 1.0f;
-	private List<Direction> movement; // 0: Left, 1: Up, 2: Right, 3: Down
-	private Direction currentMove;
-	private bool paused;
-
-	// AI variables
+	
+	// control variables
+	private List<Move> movement; // 0: Left, 1: Up, 2: Right, 3: Down
+	private Move currentMove;
 	private Action currentAction;
+	private int pauseTimer;
+	
+	private bool paused;
+	
+	// AI variables
+	private Action nextAction;
 	private AIState currentState;
 	private Vector2 moveTo; // used for AI's, to move to a point
-	private int actionTimer;
 	private int moveTimer;
-
+	
 	// Use this for initialization
 	void Awake () {
-		paused = true;
-		movement = new List<Direction>();
-		currentMove = Direction.None;
-
-		currentAction = Action.Wait;
+		paused = true; pauseTimer = 0;
+		movement = new List<Move>();
+		currentMove = Move.None;
+		currentAction = Action.None;
+		
+		nextAction = Action.None;
+		currentState = AIState.None;
 		moveTo = transform.localPosition;
-		actionTimer = 0;
-
+		
 		legsAnimator = legs.GetComponent<Animator>();
 		bodyAnimator = body.GetComponent<Animator>();
 		headAnimator = head.GetComponent<Animator>();
@@ -54,108 +61,147 @@ public class Character : MonoBehaviour {
 		bodyAnimator.Play("idle", -1, float.NegativeInfinity);
 		headAnimator.Play("idle", -1, float.NegativeInfinity);
 	}
-
+	
 	public void setPaused(bool newPaused) {
 		paused = newPaused;
 	}
-
+	
 	public void setAppearance(RuntimeAnimatorController legsCont, RuntimeAnimatorController bodyCont, RuntimeAnimatorController headCont) {
 		legsAnimator.runtimeAnimatorController = legsCont;
 		bodyAnimator.runtimeAnimatorController = bodyCont;;
 		headAnimator.runtimeAnimatorController = headCont;
 	}
-
+	
 	public void setColor(Color color) {
 		legs.GetComponent<SpriteRenderer> ().color = color;
 		body.GetComponent<SpriteRenderer> ().color = color;
 		head.GetComponent<SpriteRenderer> ().color = color;
 	}
+	
+	private void Interact() {
+		// Get closest object
+		GameObject interactObj = charMgr.getClosestObject (transform.localPosition.x, transform.localPosition.y, interactRad);
 
-	private void PlayerAttack() {
-		if (Input.GetKey (attack)) {
-			legsAnimator.Play ("interact_down", -1, float.NegativeInfinity);
-			bodyAnimator.Play("interact_down", -1, float.NegativeInfinity);
-			headAnimator.Play("interact_down", -1, float.NegativeInfinity);
-		}
-		if (Input.GetKeyDown (attack)) {
-			float dX = enemy.transform.localPosition.x - transform.localPosition.x;
-			float dY = enemy.transform.localPosition.y - transform.localPosition.y;
-			float dist = Mathf.Sqrt (dX*dX + dY*dY);
-			if (dist < 0.5) {
-				if (player == Player.One) {
-					Application.LoadLevel ("Player1Wins");
+		if (interactObj != null) {
+			float dX = interactObj.transform.localPosition.x - transform.localPosition.x;
+			float dY = interactObj.transform.localPosition.y - transform.localPosition.y;
+
+			if (Mathf.Abs (dX) > Mathf.Abs (dY)) {
+				if (dX < 0) {
+					transform.localScale = new Vector3 (-1, 1, 1);
+				} else
+					transform.localScale = new Vector3 (1, 1, 1);
+
+				legsAnimator.Play ("interact_side", -1, float.NegativeInfinity);
+				bodyAnimator.Play ("interact_side", -1, float.NegativeInfinity);
+				headAnimator.Play ("interact_side", -1, float.NegativeInfinity);
+			} else {
+				if (dY < 0) {
+					legsAnimator.Play ("interact_down", -1, float.NegativeInfinity);
+					bodyAnimator.Play ("interact_down", -1, float.NegativeInfinity);
+					headAnimator.Play ("interact_down", -1, float.NegativeInfinity);
 				} else {
-					Application.LoadLevel ("Player2Wins");
+					legsAnimator.Play ("interact_up", -1, float.NegativeInfinity);
+					bodyAnimator.Play ("interact_up", -1, float.NegativeInfinity);
+					headAnimator.Play ("interact_right", -1, float.NegativeInfinity);
 				}
 			}
+
+			pauseTimer = 30;
+		}
+		return;
+	}
+	
+	private void Attack() {
+		legsAnimator.Play ("interact_down", -1, float.NegativeInfinity);
+		bodyAnimator.Play ("interact_down", -1, float.NegativeInfinity);
+		headAnimator.Play ("interact_down", -1, float.NegativeInfinity);
+		pauseTimer = 30;
+
+		float dX = enemy.transform.localPosition.x - transform.localPosition.x;
+		float dY = enemy.transform.localPosition.y - transform.localPosition.y;
+		
+		float dist = Mathf.Sqrt (dX * dX + dY * dY);
+		if (dist < 0.8) {
+			if (player == Player.One) {
+				Application.LoadLevel ("Player1Wins");
+			} else
+				Application.LoadLevel ("Player2Wins");
 		}
 	}
-
+	
+	private void PlayerAction() {
+		if (Input.GetKeyDown (interact)) {
+			currentAction = Action.Interact;
+		}
+		
+		if (Input.GetKeyDown (attack)) {
+			currentAction = Action.Attack;
+		}
+	}
+	
 	private void PlayerMovement() {
 		if (Input.GetKeyDown (left)) {
-			movement.Add (Direction.Left);
+			movement.Add (Move.Left);
 		} else
 			if (Input.GetKeyUp (left))
-			movement.Remove (Direction.Left);
-
+				movement.Remove (Move.Left);
+		
 		if (Input.GetKeyDown (up)) {
-			movement.Add (Direction.Up);
+			movement.Add (Move.Up);
 		} else
 			if (Input.GetKeyUp (up))
-				movement.Remove (Direction.Up);
-
+				movement.Remove (Move.Up);
+		
 		if (Input.GetKeyDown (right)) {
-			movement.Add (Direction.Right);
+			movement.Add (Move.Right);
 		} else
 			if (Input.GetKeyUp (right))
-				movement.Remove (Direction.Right);
-
+				movement.Remove (Move.Right);
+		
 		if (Input.GetKeyDown (down)) {
-			movement.Add (Direction.Down);
+			movement.Add (Move.Down);
 		} else
 			if (Input.GetKeyUp (down))
-				movement.Remove (Direction.Down);
-
+				movement.Remove (Move.Down);
+		
 		if (movement.Count > 0) {
 			currentMove = movement [movement.Count - 1];
 		} else
-			currentMove = Direction.None;
+			currentMove = Move.None;
 	}
-
+	
 	private void NPCNext() {
 		switch (Random.Range (0, 1)) {
 		case 0: // Wait at a random point
-			currentAction = Action.Wait;
+			nextAction = Action.Wait;
 			currentState = AIState.Go;
 			moveTo = new Vector2 (Random.Range (-7.0f, 7.0f), Random.Range (-3.0f, 3.0f));
-			actionTimer = Random.Range (15, 180);
 			break;
 		}
 	}
-
+	
 	private void NPCAction() { 
-		if (actionTimer == 0) {
-			currentState = AIState.None;
-		} else
-			actionTimer--;
+		currentAction = nextAction;
+		currentState = AIState.None;
 	}
-
+	
 	private void NPCMovement() {
 		float distX = Mathf.Abs (moveTo.x - transform.localPosition.x);
 		float distY = Mathf.Abs (moveTo.y - transform.localPosition.y);
-
+		
 		bool axisTargetReached = false;
-
-		if (distX <= speed / 30.0f && (currentMove == Direction.Left || currentMove == Direction.Right))
-		    axisTargetReached = true;
-
-		if (distY <= speed / 30.0f && (currentMove == Direction.Down || currentMove == Direction.Up))
+		
+		if (distX <= speed / 30.0f && (currentMove == Move.Left || currentMove == Move.Right))
 			axisTargetReached = true;
-
+		
+		if (distY <= speed / 30.0f && (currentMove == Move.Down || currentMove == Move.Up))
+			axisTargetReached = true;
+		
 		if (moveTimer == 0 || axisTargetReached) {
 			int movX = 0, movY = 0;
-			currentMove = Direction.None;
-
+			currentMove = Move.None;
+			
 			// DETERMINE WHAT DIRECTIONS (OR NONE) IN EACH AXES IS REQUIRED
 			if (distX > speed / 30.0f) {
 				if (moveTo.x > transform.localPosition.x) {
@@ -163,21 +209,21 @@ public class Character : MonoBehaviour {
 				} else
 					movX = -1; // otherwise it is to the left
 			}
-
+			
 			if (distY > speed / 30.0f) {
 				if (moveTo.y > transform.localPosition.y) {
 					movY = 1; // target is to the above
 				} else
 					movY = -1; // otherwise it is to the bottom
 			}
-
+			
 			// IF NEITHER NEEDED, DONE
 			if (movX == 0 && movY == 0) {
 				moveTimer = 0;
 				currentState = AIState.Do;
 				return;
 			}
-
+			
 			// PICK ONE IF BOTH ARE NEEDED
 			if (movX != 0 && movY != 0) {
 				if (Random.Range (0.0f,1.0f) >= 0.5f) {
@@ -185,35 +231,40 @@ public class Character : MonoBehaviour {
 				} else
 					movY = 0;
 			}
-
+			
 			// MOVE ON DECIDED AXIS
 			if (movX != 0) { // move on X axis
 				if (movX == -1) {
-					currentMove = Direction.Left;
+					currentMove = Move.Left;
 				} else
-					currentMove = Direction.Right;
+					currentMove = Move.Right;
 			} else { // move on Y axis
 				if (movY == -1) {
-					currentMove = Direction.Down;
+					currentMove = Move.Down;
 				} else
-					currentMove = Direction.Up;
+					currentMove = Move.Up;
 			}
-
+			
 			// SET ACTION TIMER TO A RANDOM VALUE UNDER WHAT IS NEEDED
 			moveTimer = Random.Range (15, 180);
 		} else
 			moveTimer--;
 	}
-
+	
 	// Update is called once per frame
 	void Update () {
-		if (paused)
+		if (paused) // if paused, return
 			return;
 
-		transform.Translate (new Vector3 (0.0f, 0.0f, transform.localPosition.y - transform.localPosition.z));
+		Rigidbody2D body = GetComponent<Rigidbody2D>();
 
+		// Controls
+		transform.Translate (new Vector3 (0.0f, 0.0f, transform.localPosition.y - transform.localPosition.z));
+		
 		if (player != Player.None) {
-			PlayerMovement (); PlayerAttack ();
+			PlayerMovement (); PlayerAction ();
+			if (player == Player.One)
+				print (currentMove);
 		} else {
 			switch(currentState) {
 			case AIState.None:
@@ -228,35 +279,54 @@ public class Character : MonoBehaviour {
 			}
 		}
 
-		Rigidbody2D body = GetComponent<Rigidbody2D>();
+		if (pauseTimer > 0) {
+			pauseTimer--;
+			return;
+		}
 
-		if (currentMove != Direction.None) {
+		// Movement and Actions
+		if (currentAction != Action.None) {
+			switch (currentAction) {
+			case Action.Wait:
+				pauseTimer = Random.Range (15, 180);
+				break;
+			case Action.Interact:
+				Interact ();
+				break;
+			case Action.Attack:
+				Attack ();
+				break;
+			}
+
+			body.velocity = new Vector2 (0.0f, 0.0f);
+			currentAction = Action.None;
+		}
+		
+		if (currentMove != Move.None) {
 			legsAnimator.Play ("walk", -1, float.NegativeInfinity);
 			bodyAnimator.Play ("walk", -1, float.NegativeInfinity);
 			headAnimator.Play ("walk", -1, float.NegativeInfinity);
 		}
 		switch (currentMove) {
-		case Direction.Left:
+		case Move.Left:
 			transform.localScale = new Vector3 (-1, 1, 1);
 			body.velocity = new Vector2 (-speed, 0.0f);
 			break;
-		case Direction.Up:
+		case Move.Up:
 			body.velocity = new Vector2 (0.0f, speed);
 			break;
-		case Direction.Right:
+		case Move.Right:
 			transform.localScale = new Vector3 (1, 1, 1);
 			body.velocity = new Vector2 (speed, 0.0f);
 			break;
-		case Direction.Down:
+		case Move.Down:
 			body.velocity = new Vector2 (0.0f, -speed);
 			break;
 		default:
 			body.velocity = new Vector2 (0.0f, 0.0f);
-			if (!Input.GetKey (attack)) {
-				legsAnimator.Play ("idle", -1, float.NegativeInfinity);
-				bodyAnimator.Play ("idle", -1, float.NegativeInfinity);
-				headAnimator.Play ("idle", -1, float.NegativeInfinity);
-			}
+			legsAnimator.Play ("idle", -1, float.NegativeInfinity);
+			bodyAnimator.Play ("idle", -1, float.NegativeInfinity);
+			headAnimator.Play ("idle", -1, float.NegativeInfinity);
 			break;
 		}
 	}

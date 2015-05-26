@@ -7,6 +7,8 @@ public class CharacterManager : MonoBehaviour {
 	public Character One;
 	public Character Two;
 
+	public GameObject[] objects;
+
 	public RuntimeAnimatorController[] legs;
 	public RuntimeAnimatorController[] bodies;
 	public RuntimeAnimatorController[] heads;
@@ -53,6 +55,23 @@ public class CharacterManager : MonoBehaviour {
 	public void unpauseAll() {
 		foreach (Character character in characters)
 			character.setPaused (false);
+	}
+
+	public GameObject getClosestObject(float x, float y, float radius) {
+		GameObject foundObj = null;
+
+		float maxDist = radius;
+		foreach(GameObject obj in objects) {
+			float dX = obj.transform.localPosition.x - x;
+			float dY = obj.transform.localPosition.y - y;
+			float dist = Mathf.Sqrt (dX*dX + dY*dY);
+			if (dist < maxDist) {
+				maxDist = dist;
+				foundObj = obj;
+			}
+		}
+
+		return foundObj;
 	}
 	
 	// Update is called once per frame
