@@ -307,17 +307,17 @@ public class Character : MonoBehaviour {
 			body.velocity = new Vector2 (0.0f, 0.0f);
 
 			if (paused == 2) { //frozen
-				legsAnimator.speed = 0;
-				bodyAnimator.speed = 0;
-				headAnimator.speed = 0;
+				if (legsAnimator.speed != 0) legsAnimator.speed = 0;
+				if (bodyAnimator.speed != 0) bodyAnimator.speed = 0;
+				if (headAnimator.speed != 0) headAnimator.speed = 0;
 			}
 
 			pauseTimer--;
 			return;
 		} else {
-			legsAnimator.speed = 1;
-			bodyAnimator.speed = 1;
-			headAnimator.speed = 1;
+			if (legsAnimator.speed != 1) legsAnimator.speed = 1;
+			if (bodyAnimator.speed != 1) bodyAnimator.speed = 1;
+			if (headAnimator.speed != 1) headAnimator.speed = 1;
 		}
 
 		// Movement and Actions
