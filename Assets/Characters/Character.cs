@@ -428,18 +428,6 @@ public class Character : MonoBehaviour {
 		
 		if (player != Player.None) {
 			PlayerMovement (); PlayerAction ();
-		} else {
-			switch(currentState) {
-			case AIState.None:
-				NPCNext ();
-				break;
-			case AIState.Go:
-				NPCMovement ();
-				break;
-			case AIState.Do:
-				NPCAction ();
-				break;
-			}
 		}
 
 		// paused = 1 (paused), paused = 2 (frozen)
@@ -458,6 +446,21 @@ public class Character : MonoBehaviour {
 			if (legsAnimator.speed != 1) legsAnimator.speed = 1;
 			if (bodyAnimator.speed != 1) bodyAnimator.speed = 1;
 			if (headAnimator.speed != 1) headAnimator.speed = 1;
+		}
+
+		// AI
+		if (player == Player.None) {
+			switch(currentState) {
+			case AIState.None:
+				NPCNext ();
+				break;
+			case AIState.Go:
+				NPCMovement ();
+				break;
+			case AIState.Do:
+				NPCAction ();
+				break;
+			}
 		}
 
 		// Movement and Actions
