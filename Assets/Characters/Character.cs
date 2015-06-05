@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Character : MonoBehaviour {
 	// constants
-	const float speed = 1.4f;
+	const float speed = 1.3f;
 	const float interactRad = 1.0f;
 
 	enum Move {None, Left, Up, Right, Down};

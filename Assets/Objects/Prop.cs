@@ -20,14 +20,14 @@ public class Prop : MonoBehaviour {
 
 	public bool Interact(Player player) {
 		if (player == Player.One) {
-			oneTimer = 300;
+			oneTimer = 450;
 
 			if (twoTimer > 0)
 				return true;
 		}
 
 		if (player == Player.Two) {
-			twoTimer = 300;
+			twoTimer = 450;
 
 			if (oneTimer > 0)
 				return true;
