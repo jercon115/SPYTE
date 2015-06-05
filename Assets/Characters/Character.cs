@@ -44,6 +44,7 @@ public class Character : MonoBehaviour {
 	private Move currentMove;
 	private Action currentAction;
 	private float pauseTimer;
+	private int killAttempts;
 	
 	private int paused;
 	
@@ -69,7 +70,8 @@ public class Character : MonoBehaviour {
 		movement = new List<Move>();
 		currentMove = Move.None;
 		currentAction = Action.None;
-		
+		killAttempts = 0;
+
 		nextAction = Action.None;
 		currentState = AIState.None;
 		moveTo = transform.localPosition;
@@ -232,10 +234,18 @@ public class Character : MonoBehaviour {
 		
 		float dist = Mathf.Sqrt (dX * dX + dY * dY);
 		if (dist < 0.8) {
-			enemy.Die();
+			enemy.Die ();
 			charMgr.setAllPaused (2);
 			charMgr.setPlayersPaused (1);
 			gameMgr.setWinner (player);
+		} else {
+			killAttempts++;
+			if (killAttempts >= 3) {
+				Die ();
+				charMgr.setAllPaused (2);
+				charMgr.setPlayersPaused (1);
+				gameMgr.setWinner (enemy.player);
+			}
 		}
 	}
 

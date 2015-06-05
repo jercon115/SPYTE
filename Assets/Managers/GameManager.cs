@@ -142,9 +142,9 @@ public class GameManager : MonoBehaviour {
 		} else if (gamestate == GameState.End) {
 			Vector3 xyDiff;
 			if (winner == Player.One) {
-				xyDiff = (charMgr.One.transform.localPosition - cam.transform.localPosition);
-			} else
 				xyDiff = (charMgr.Two.transform.localPosition - cam.transform.localPosition);
+			} else
+				xyDiff = (charMgr.One.transform.localPosition - cam.transform.localPosition);
 			xyDiff.Scale (new Vector3(1.0f,1.0f,0.0f));
 			cam.transform.Translate (xyDiff*0.03f);
 
