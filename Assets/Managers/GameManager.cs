@@ -30,8 +30,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject room;
 	public GameObject windows;
 
-	public GameObject[] redStrikes;
-	public GameObject[] blueStrikes;
+	public Image[] redStrikes;
+	public Image[] blueStrikes;
 
 	private SpriteRenderer roomSprite;
 	private SpriteRenderer windowsSprite;
@@ -199,6 +199,8 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
+		updateStrikes ();
+
 		if (gamestate == GameState.Countdown) {
 			timerText.text = Mathf.CeilToInt (countdownTimer).ToString ();
 			countdownTimer -= Time.deltaTime;
@@ -209,7 +211,6 @@ public class GameManager : MonoBehaviour {
 				gamestate = GameState.Play;
 			}
 		} else if (gamestate == GameState.Play) {
-			updateStrikes ();
 			updateSituation ();
 
 			if (winner != Player.None) {
