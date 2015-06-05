@@ -70,6 +70,9 @@ public class Character : MonoBehaviour {
 	
 	public void setPaused(bool newPaused) {
 		paused = newPaused;
+		legsAnimator.StopPlayback ();
+		bodyAnimator.StopPlayback ();
+		headAnimator.StopPlayback ();
 	}
 	
 	public void setAppearance(RuntimeAnimatorController legsCont, RuntimeAnimatorController bodyCont, RuntimeAnimatorController headCont) {
@@ -104,18 +107,18 @@ public class Character : MonoBehaviour {
 				} else
 					transform.localScale = new Vector3 (1, 1, 1);
 
-				legsAnimator.Play ("interact_side", -1, float.NegativeInfinity);
-				bodyAnimator.Play ("interact_side", -1, float.NegativeInfinity);
-				headAnimator.Play ("interact_side", -1, float.NegativeInfinity);
+				legsAnimator.Play ("use_side", -1, float.NegativeInfinity);
+				bodyAnimator.Play ("use_side", -1, float.NegativeInfinity);
+				headAnimator.Play ("use_side", -1, float.NegativeInfinity);
 			} else {
 				if (dY < 0) {
-					legsAnimator.Play ("interact_down", -1, float.NegativeInfinity);
-					bodyAnimator.Play ("interact_down", -1, float.NegativeInfinity);
-					headAnimator.Play ("interact_down", -1, float.NegativeInfinity);
+					legsAnimator.Play ("use_down", -1, float.NegativeInfinity);
+					bodyAnimator.Play ("use_down", -1, float.NegativeInfinity);
+					headAnimator.Play ("use_down", -1, float.NegativeInfinity);
 				} else {
-					legsAnimator.Play ("interact_up", -1, float.NegativeInfinity);
-					bodyAnimator.Play ("interact_up", -1, float.NegativeInfinity);
-					headAnimator.Play ("interact_up", -1, float.NegativeInfinity);
+					legsAnimator.Play ("use_up", -1, float.NegativeInfinity);
+					bodyAnimator.Play ("use_up", -1, float.NegativeInfinity);
+					headAnimator.Play ("use_up", -1, float.NegativeInfinity);
 				}
 			}
 
@@ -127,9 +130,9 @@ public class Character : MonoBehaviour {
 	}
 	
 	private void Attack() {
-		legsAnimator.Play ("interact_down", -1, float.NegativeInfinity);
-		bodyAnimator.Play ("interact_down", -1, float.NegativeInfinity);
-		headAnimator.Play ("interact_down", -1, float.NegativeInfinity);
+		legsAnimator.Play ("use_down", -1, float.NegativeInfinity);
+		bodyAnimator.Play ("use_down", -1, float.NegativeInfinity);
+		headAnimator.Play ("use_down", -1, float.NegativeInfinity);
 		pauseTimer = 30;
 
 		float dX = enemy.transform.localPosition.x - transform.localPosition.x;
@@ -137,13 +140,18 @@ public class Character : MonoBehaviour {
 		
 		float dist = Mathf.Sqrt (dX * dX + dY * dY);
 		if (dist < 0.8) {
-			if (player == Player.One) {
-				Application.LoadLevel ("Player1Wins");
-			} else
-				Application.LoadLevel ("Player2Wins");
+			enemy.Die();
+			gameMgr.EndGame ();
+			charMgr.pauseAll ();
 		}
 	}
-	
+
+	public void Die() {
+		legsAnimator.Play ("death", -1, float.NegativeInfinity);
+		bodyAnimator.Play ("death", -1, float.NegativeInfinity);
+		headAnimator.Play ("death", -1, float.NegativeInfinity);
+	}
+
 	private void PlayerAction() {
 		if (Input.GetKeyDown (interact)) {
 			currentAction = Action.Interact;

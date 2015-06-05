@@ -1,0 +1,297 @@
+fileFormatVersion: 2
+guid: 102c890803ec2b1439d1d58f94918baf
+timeCreated: 1433439707
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: head_brown_0
+    21300002: head_brown_1
+    21300004: head_brown_2
+    21300006: head_brown_3
+    21300008: head_brown_4
+    21300010: head_brown_5
+    21300012: head_brown_6
+    21300014: head_brown_7
+    21300016: head_brown_8
+    21300018: head_brown_9
+    21300020: head_brown_10
+    21300022: head_brown_11
+    21300024: head_brown_12
+    21300026: head_brown_13
+    21300028: head_brown_14
+    21300030: head_brown_15
+    21300032: head_brown_16
+    21300034: head_brown_17
+    21300036: head_brown_18
+    21300038: head_brown_19
+    21300040: head_brown_20
+    21300042: head_brown_21
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 128
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: head_brown_0
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 769
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_1
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 769
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_2
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 769
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_3
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 769
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_4
+      rect:
+        serializedVersion: 2
+        x: 1025
+        y: 769
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_5
+      rect:
+        serializedVersion: 2
+        x: 1281
+        y: 769
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_6
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 513
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_7
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 513
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_8
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 513
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_9
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 513
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_10
+      rect:
+        serializedVersion: 2
+        x: 1025
+        y: 513
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_11
+      rect:
+        serializedVersion: 2
+        x: 1281
+        y: 513
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_12
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 257
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_13
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 257
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_14
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 257
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_15
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 257
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_16
+      rect:
+        serializedVersion: 2
+        x: 1025
+        y: 257
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_17
+      rect:
+        serializedVersion: 2
+        x: 1281
+        y: 257
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_18
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_19
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 1
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_20
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 1
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: head_brown_21
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 1
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

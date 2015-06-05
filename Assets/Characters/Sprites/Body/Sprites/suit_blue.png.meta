@@ -1,0 +1,297 @@
+fileFormatVersion: 2
+guid: e9cca8176844680408325ae42d34cb23
+timeCreated: 1433438706
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: suit_blue_0
+    21300002: suit_blue_1
+    21300004: suit_blue_2
+    21300006: suit_blue_3
+    21300008: suit_blue_4
+    21300010: suit_blue_5
+    21300012: suit_blue_6
+    21300014: suit_blue_7
+    21300016: suit_blue_8
+    21300018: suit_blue_9
+    21300020: suit_blue_10
+    21300022: suit_blue_11
+    21300024: suit_blue_12
+    21300026: suit_blue_13
+    21300028: suit_blue_14
+    21300030: suit_blue_15
+    21300032: suit_blue_16
+    21300034: suit_blue_17
+    21300036: suit_blue_18
+    21300038: suit_blue_19
+    21300040: suit_blue_20
+    21300042: suit_blue_21
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 128
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: suit_blue_0
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 769
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_1
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 769
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_2
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 769
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_3
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 769
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_4
+      rect:
+        serializedVersion: 2
+        x: 1025
+        y: 769
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_5
+      rect:
+        serializedVersion: 2
+        x: 1281
+        y: 769
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_6
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 513
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_7
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 513
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_8
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 513
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_9
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 513
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_10
+      rect:
+        serializedVersion: 2
+        x: 1025
+        y: 513
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_11
+      rect:
+        serializedVersion: 2
+        x: 1281
+        y: 513
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_12
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 257
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_13
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 257
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_14
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 257
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_15
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 257
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_16
+      rect:
+        serializedVersion: 2
+        x: 1025
+        y: 257
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_17
+      rect:
+        serializedVersion: 2
+        x: 1281
+        y: 257
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_18
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_19
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 1
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_20
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 1
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: suit_blue_21
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 1
+        width: 254
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

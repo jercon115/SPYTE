@@ -6,7 +6,7 @@ public enum Player {None, One, Two};
 
 public class GameManager : MonoBehaviour {
 
-	enum GameState { WaitForOne, RevealOne, WaitForTwo, RevealTwo, Play };
+	enum GameState { WaitForOne, RevealOne, WaitForTwo, RevealTwo, Play, End };
 	
 	public CharacterManager charMgr;
 
@@ -67,6 +67,9 @@ public class GameManager : MonoBehaviour {
 				charMgr.revealPlayer (Player.None);
 				charMgr.unpauseAll();
 				break;
+			case GameState.End:
+				charMgr.pauseAll();
+				break;
 			}
 		}
 
@@ -85,6 +88,10 @@ public class GameManager : MonoBehaviour {
 				Mission.GetComponent<SpriteRenderer> ().color = new Color(1.0f, 0.5f, 0.5f, 1.0f);
 			}
 		}
+	}
+
+	public void EndGame() {
+		gamestate = GameState.End;
 	}
 
 	public void SetSceneGame () {
