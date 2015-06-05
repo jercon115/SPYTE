@@ -6,55 +6,33 @@ public enum Player {None, One, Two};
 
 public class GameManager : MonoBehaviour {
 
-	enum GameState { WaitForOne, RevealOne, WaitForTwo, RevealTwo, Play, End, Restart};
+	enum GameState { WaitForOne, RevealOne, WaitForTwo, RevealTwo, Countdown, Play, End, Restart};
 	
 	public CharacterManager charMgr;
 
 	public Camera cam;
-	public Text MissionTimerText;
-	public Image MissionImage;
-	public Sprite MissionSprite;
-	public GameObject Mission;
-	public GameObject[] Objects;
-
-	public Sprite HeadBlack;
-	public Sprite HeadBlond;
-	public Sprite BodyRed;
-	public Sprite BodyBlue;
-	public Sprite LegsRed;
-	public Sprite LegsBlue;
-
-	public Image PlayerOneHead;
-	public Image PlayerOneBody;
-	public Image PlayerOneLegs;
-	public Image PlayerTwoHead;
-	public Image PlayerTwoBody;
-	public Image PlayerTwoLegs;
+	public Text timerText;
 		
-	private int MissionTimer;
-	private bool MissionFound;
-	private int PlayerOneClues;
-	private int PlayerTwoClues;
+	private int timer;
+
 	private GameState gamestate;
 	private Player winner;
+	private bool pressToContinue;
 
 	// Use this for initialization
 	void Start () {
 		gamestate = GameState.WaitForOne;
-
-		PlayerOneClues = 0;
-		PlayerTwoClues = 0;
 		winner = Player.None;
 
-		MissionTimer = 1200; MissionFound = false;
-		int RandomMission = Random.Range (0, 10);
-		Mission = Objects [RandomMission];
-		Mission.GetComponent<SpriteRenderer> ().color = new Color(1.0f, 0.5f, 0.5f, 1.0f);
+		timer = 150;
+		timerText.enabled = false;
+
+		pressToContinue = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.anyKeyDown && gamestate != GameState.Play) {
+		if(Input.anyKeyDown && pressToContinue) {
 			gamestate++;
 			switch (gamestate) {
 			case GameState.RevealOne:
@@ -66,9 +44,11 @@ public class GameManager : MonoBehaviour {
 			case GameState.RevealTwo:
 				charMgr.revealPlayer (Player.Two);
 				break;
-			case GameState.Play:
+			case GameState.Countdown:
+				pressToContinue = false;
 				charMgr.revealPlayer (Player.None);
-				charMgr.setAllPaused(0);
+				timer = 150;
+				timerText.enabled = true;
 				break;
 			case GameState.Restart:
 				if (winner == Player.One) {
@@ -79,24 +59,19 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		if (gamestate == GameState.Play) {
-			if (MissionTimer > 0) {
-				MissionTimer--;
-				int MissionTimerSeconds = MissionTimer / 40;
-				MissionTimerText.text = MissionTimerSeconds.ToString ();
-			} else {
-				updateAppearances ();
+		if (gamestate == GameState.Countdown) {
+			timerText.text = Mathf.CeilToInt (timer/30.0f).ToString ();
+			timer--;
 
-				MissionTimer = 1200;
-				MissionFound = false;
-				int RandomMission = Random.Range (0, 10);
-				Mission.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 1.0f);
-				Mission = Objects [RandomMission];
-				Mission.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 0.5f, 0.5f, 1.0f);
+			if (timer <= 0) {
+				timerText.enabled = false;
+				charMgr.setAllPaused (0);
+				gamestate = GameState.Play;
 			}
-
+		} else if (gamestate == GameState.Play) {
 			if (winner != Player.None) {
 				gamestate = GameState.End;
+				pressToContinue = true;
 			}
 		} else if (gamestate == GameState.End) {
 			Vector3 xyDiff;
@@ -125,45 +100,5 @@ public class GameManager : MonoBehaviour {
 	
 	public void SetScenePlayer2Wins () {
 		Application.LoadLevel ("Player2Wins");
-	}
-
-	public void updateClues(GameObject obj, Player player) {
-		if (MissionFound)
-			return;
-
-		if (obj == Mission) {
-			if (player == Player.One) {
-				PlayerOneClues++;
-			} else if (player == Player.Two) {
-				PlayerTwoClues++;
-			}
-			MissionFound = true;
-		}
-	}
-
-	private void updateAppearances() {
-		switch(PlayerOneClues) {
-		case 1:
-			PlayerTwoHead.sprite = charMgr.Two.headSprite;
-			break;
-		case 2:
-			PlayerTwoBody.sprite = charMgr.Two.bodySprite;
-			break;
-		case 3:
-			PlayerTwoLegs.sprite = charMgr.Two.legSprite;
-			break;
-		}
-
-		switch(PlayerTwoClues) {
-		case 1:
-			PlayerOneHead.sprite = charMgr.One.headSprite;
-			break;
-		case 2:
-			PlayerOneBody.sprite = charMgr.One.bodySprite;
-			break;
-		case 3:
-			PlayerOneLegs.sprite = charMgr.One.legSprite;
-			break;
-		}
 	}
 }

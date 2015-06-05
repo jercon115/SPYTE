@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Character : MonoBehaviour {
 	// constants
-	const float speed = 1.0f;
+	const float speed = 1.4f;
 	const float interactRad = 1.0f;
 
 	enum Move {None, Left, Up, Right, Down};
@@ -188,9 +188,7 @@ public class Character : MonoBehaviour {
 				headAnimator.Play ("use_up", -1, float.NegativeInfinity);
 			}
 		}
-		
-		if (player != Player.None) gameMgr.updateClues(interactObj, player);
-		
+
 		pauseTimer = 30;
 	}
 	
