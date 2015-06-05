@@ -80,13 +80,10 @@ public class GameManager : MonoBehaviour {
 		windowsSprite.color = new Color (windowsRGB[0], windowsRGB[1], windowsRGB[2], 1.0f);
 
 		if (charMgr.currentSituation == Situation.Dance) {
-			if (charMgr.danceTimer == 1) {
-				if (roomRGBTarg[0] == 0.5f) {
-					roomRGBTarg[0] = 1.0f; roomRGBTarg[1] = 0.5f; roomRGBTarg[2] = 1.0f;
-				} else if (roomRGBTarg[0] == 1.0f) {
-					roomRGBTarg[0] = 0.5f; roomRGBTarg[1] = 0.5f; roomRGBTarg[2] = 1.0f;
-				}
-			}
+			if (charMgr.danceTimer > 0.5f) {
+				roomRGBTarg[0] = 1.0f; roomRGBTarg[1] = 0.5f; roomRGBTarg[2] = 1.0f;
+			} else
+				roomRGBTarg[0] = 0.5f; roomRGBTarg[1] = 0.5f; roomRGBTarg[2] = 1.0f;
 		} else {
 			roomRGBTarg[0] = 1.0f; roomRGBTarg[1] = 1.0f; roomRGBTarg[2] = 1.0f;
 		}
