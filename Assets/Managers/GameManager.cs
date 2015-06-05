@@ -30,6 +30,9 @@ public class GameManager : MonoBehaviour {
 	public GameObject room;
 	public GameObject windows;
 
+	public GameObject[] redStrikes;
+	public GameObject[] blueStrikes;
+
 	private SpriteRenderer roomSprite;
 	private SpriteRenderer windowsSprite;
 	private float[] roomRGB; private float[] roomRGBTarg;
@@ -47,6 +50,11 @@ public class GameManager : MonoBehaviour {
 		windowsSprite = windows.GetComponent<SpriteRenderer> ();
 		windowsRGB = new float[3] {0.0f, 0.0f, 0.0f};
 		windowsSprite.color = new Color (0, 0, 0);
+
+		for (int i = 0; i < 3; i++) {
+			redStrikes[i].transform.localScale = new Vector3(0.0f,0.0f);
+			blueStrikes[i].transform.localScale = new Vector3(0.0f,0.0f);
+		}
 
 		Application.targetFrameRate = 30;
 
@@ -125,6 +133,21 @@ public class GameManager : MonoBehaviour {
 			situationTimer -= Time.deltaTime;
 	}
 
+	private void updateStrikes() {
+		for (int i = 0; i < 3; i++) {
+			Vector3 redScale = new Vector3(0.0f,0.0f);
+			if (i < charMgr.One.killAttempts)
+				redScale = new Vector3(1.0f,1.0f);
+
+			Vector3 blueScale = new Vector3(0.0f,0.0f);
+			if (i < charMgr.Two.killAttempts)
+				blueScale = new Vector3(1.0f,1.0f);
+
+			redStrikes[i].transform.localScale += (redScale - redStrikes[i].transform.localScale)*0.1f;
+			blueStrikes[i].transform.localScale += (blueScale - blueStrikes[i].transform.localScale)*0.1f;
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if(setupPhase) {
@@ -186,6 +209,7 @@ public class GameManager : MonoBehaviour {
 				gamestate = GameState.Play;
 			}
 		} else if (gamestate == GameState.Play) {
+			updateStrikes ();
 			updateSituation ();
 
 			if (winner != Player.None) {

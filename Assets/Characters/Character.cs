@@ -44,7 +44,9 @@ public class Character : MonoBehaviour {
 	private Move currentMove;
 	private Action currentAction;
 	private float pauseTimer;
-	private int killAttempts;
+
+	[HideInInspector]
+	public int killAttempts;
 	
 	private int paused;
 	
@@ -61,7 +63,7 @@ public class Character : MonoBehaviour {
 	private float danceReaction;
 	private bool dancePause;
 
-	public Situation currentSituation;
+	private Situation currentSituation;
 	private Situation nextSituation;
 	
 	// Use this for initialization
@@ -224,10 +226,7 @@ public class Character : MonoBehaviour {
 	}
 	
 	private void Attack() {
-		legsAnimator.Play ("use_down", -1, float.NegativeInfinity);
-		bodyAnimator.Play ("use_down", -1, float.NegativeInfinity);
-		headAnimator.Play ("use_down", -1, float.NegativeInfinity);
-		pauseTimer = 1.0f;
+		pauseTimer = 0.5f;
 
 		float dX = enemy.transform.localPosition.x - transform.localPosition.x;
 		float dY = enemy.transform.localPosition.y - transform.localPosition.y;
