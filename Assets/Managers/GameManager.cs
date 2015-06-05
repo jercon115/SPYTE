@@ -7,7 +7,7 @@ public enum Situation {None, Dance, Fireworks};
 
 public class GameManager : MonoBehaviour {
 
-	enum GameState { WaitForOne, RevealOne, WaitForTwo, RevealTwo, Countdown, Play, End, Restart};
+	enum GameState { WaitForReady, RevealOne, RevealTwo, Countdown, Play, End, Restart};
 	
 	public CharacterManager charMgr;
 
@@ -20,13 +20,15 @@ public class GameManager : MonoBehaviour {
 
 	private GameState gamestate;
 	private Player winner;
-	private bool pressToContinue;
+	private bool setup;
+	private bool playerOneReady;
+	private bool playerTwoReady;
 
 	// Use this for initialization
 	void Awake () {
 		Application.targetFrameRate = 30;
 
-		gamestate = GameState.WaitForOne;
+		gamestate = GameState.WaitForReady;
 		winner = Player.None;
 
 		countdownTimer = 150;
@@ -34,7 +36,7 @@ public class GameManager : MonoBehaviour {
 
 		situationTimer = Random.Range (150, 300);
 
-		pressToContinue = true;
+		setup = true; playerOneReady = false; playerTwoReady = false;
 	}
 
 	private void updateSituation() {
@@ -61,20 +63,30 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(Input.anyKeyDown && pressToContinue) {
-			gamestate++;
+		if(setup) {
 			switch (gamestate) {
 			case GameState.RevealOne:
 				charMgr.revealPlayer (Player.One);
-				break;
-			case GameState.WaitForTwo:
-				charMgr.revealPlayer (Player.None);
+				playerOneReady = false; playerTwoReady = false;
+				if (!Input.GetKey (KeyCode.Q))  gamestate = GameState.WaitForReady;
 				break;
 			case GameState.RevealTwo:
 				charMgr.revealPlayer (Player.Two);
+				playerOneReady = false; playerTwoReady = false;
+				if (!Input.GetKey (KeyCode.U)) gamestate = GameState.WaitForReady;
+				break;
+			case GameState.WaitForReady:
+				charMgr.revealPlayer (Player.None);
+				if (Input.GetKeyDown (KeyCode.Q)) gamestate = GameState.RevealOne;
+				if (Input.GetKeyDown (KeyCode.U)) gamestate = GameState.RevealTwo;
+
+				if (Input.GetKeyDown (KeyCode.E)) playerOneReady = true;
+				if (Input.GetKeyDown (KeyCode.O)) playerTwoReady = true;
+
+				if (playerOneReady && playerTwoReady) gamestate = GameState.Countdown;
 				break;
 			case GameState.Countdown:
-				pressToContinue = false;
+				setup = false;
 				charMgr.revealPlayer (Player.None);
 				countdownTimer = 150;
 				timerText.enabled = true;
@@ -102,7 +114,7 @@ public class GameManager : MonoBehaviour {
 
 			if (winner != Player.None) {
 				gamestate = GameState.End;
-				pressToContinue = true;
+				setup = true;
 			}
 		} else if (gamestate == GameState.End) {
 			Vector3 xyDiff;
