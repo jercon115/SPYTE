@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour {
 		timerText.enabled = false;
 		gameTimerText.enabled = false;
 
-		situationTimer = Random.Range (5.0f, 10.0f);
+		situationTimer = Random.Range (10.0f, 20.0f);
 
 		setupPhase = true; playerOneReady = false; playerTwoReady = false;
 
