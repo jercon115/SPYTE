@@ -65,10 +65,10 @@ public class GameManager : MonoBehaviour {
 				break;
 			case GameState.Play:
 				charMgr.revealPlayer (Player.None);
-				charMgr.unpauseAll();
+				charMgr.setAllPaused(0);
 				break;
 			case GameState.End:
-				charMgr.pauseAll();
+				charMgr.setAllPaused(2);
 				break;
 			}
 		}

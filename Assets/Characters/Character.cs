@@ -39,7 +39,7 @@ public class Character : MonoBehaviour {
 	private Action currentAction;
 	private int pauseTimer;
 	
-	private bool paused;
+	private int paused;
 	
 	// AI variables
 	private Action nextAction;
@@ -50,7 +50,7 @@ public class Character : MonoBehaviour {
 	
 	// Use this for initialization
 	void Awake () {
-		paused = true; pauseTimer = 0;
+		paused = 2; pauseTimer = 0;
 		movement = new List<Move>();
 		currentMove = Move.None;
 		currentAction = Action.None;
@@ -68,11 +68,8 @@ public class Character : MonoBehaviour {
 		headAnimator.Play("idle", -1, float.NegativeInfinity);
 	}
 	
-	public void setPaused(bool newPaused) {
+	public void setPaused(int newPaused) {
 		paused = newPaused;
-		legsAnimator.StopPlayback ();
-		bodyAnimator.StopPlayback ();
-		headAnimator.StopPlayback ();
 	}
 	
 	public void setAppearance(RuntimeAnimatorController legsCont, RuntimeAnimatorController bodyCont, RuntimeAnimatorController headCont) {
@@ -142,7 +139,8 @@ public class Character : MonoBehaviour {
 		if (dist < 0.8) {
 			enemy.Die();
 			gameMgr.EndGame ();
-			charMgr.pauseAll ();
+			charMgr.setAllPaused (2);
+			charMgr.setPlayersPaused (1);
 		}
 	}
 
@@ -283,9 +281,6 @@ public class Character : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (paused) // if paused, return
-			return;
-
 		Rigidbody2D body = GetComponent<Rigidbody2D>();
 
 		// Controls
@@ -307,9 +302,22 @@ public class Character : MonoBehaviour {
 			}
 		}
 
-		if (pauseTimer > 0) {
+		// paused = 1 (paused), paused = 2 (frozen)
+		if (paused > 0 || pauseTimer > 0) {
+			body.velocity = new Vector2 (0.0f, 0.0f);
+
+			if (paused == 2) { //frozen
+				legsAnimator.speed = 0;
+				bodyAnimator.speed = 0;
+				headAnimator.speed = 0;
+			}
+
 			pauseTimer--;
 			return;
+		} else {
+			legsAnimator.speed = 1;
+			bodyAnimator.speed = 1;
+			headAnimator.speed = 1;
 		}
 
 		// Movement and Actions

@@ -50,14 +50,14 @@ public class CharacterManager : MonoBehaviour {
 			Two.setColor (new Color(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
-	public void pauseAll() {
-		foreach (Character character in characters)
-			character.setPaused (true);
+	public void setPlayersPaused(int pausedLevel) {
+		One.setPaused (pausedLevel);
+		Two.setPaused (pausedLevel);
 	}
 
-	public void unpauseAll() {
+	public void setAllPaused(int pausedLevel) {
 		foreach (Character character in characters)
-			character.setPaused (false);
+			character.setPaused (pausedLevel);
 	}
 
 	public GameObject getRandomObject () {
