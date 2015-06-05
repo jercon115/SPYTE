@@ -149,6 +149,9 @@ public class GameManager : MonoBehaviour {
 			cam.transform.Translate (xyDiff*0.03f);
 
 			cam.orthographicSize += (4.0f - cam.orthographicSize)*0.03f;
+
+			if (Input.anyKeyDown)
+				gamestate = GameState.Restart;
 		}
 	}
 
