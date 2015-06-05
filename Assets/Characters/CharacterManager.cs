@@ -82,6 +82,11 @@ public class CharacterManager : MonoBehaviour {
 		return foundObj;
 	}
 
+	public GameObject getRandomCharacter () {
+		int i = Random.Range (0, characters.Length);
+		return characters [i].gameObject;
+	}
+
 	public Character getClosestCharacter(Character me, float radius) {
 		Character foundChar = null;
 

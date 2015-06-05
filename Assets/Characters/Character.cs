@@ -45,6 +45,7 @@ public class Character : MonoBehaviour {
 	private Action nextAction;
 	private AIState currentState;
 	private Vector2 moveTo; // used for AI's, to move to a point
+	private GameObject targetObject;
 	private float moveToRad; // stop when within certain distance of moveTo
 	private int moveTimer;
 	
@@ -58,6 +59,7 @@ public class Character : MonoBehaviour {
 		nextAction = Action.None;
 		currentState = AIState.None;
 		moveTo = transform.localPosition;
+		targetObject = null;
 		moveToRad = speed / 30.0f;
 		
 		legsAnimator = legs.GetComponent<Animator>();
@@ -222,16 +224,25 @@ public class Character : MonoBehaviour {
 	}
 	
 	private void NPCNext() {
-		switch (Random.Range (0, 2)) {
+		switch (Random.Range (0, 3)) {
 		case 0: // Wait at a random point
 			nextAction = Action.Wait;
+			targetObject = null;
 			moveTo = new Vector2 (Random.Range (-7.0f, 7.0f), Random.Range (-3.0f, 3.0f));
 			moveToRad = speed / 30.0f;
 			break;
 		case 1: // Interact with random object
 			nextAction = Action.Interact;
 			GameObject interactObj = charMgr.getRandomObject();
-			moveTo = interactObj.transform.localPosition;
+			targetObject = interactObj;
+			moveTo = targetObject.transform.localPosition;
+			moveToRad = 0.5f;
+			break;
+		case 2: // Interact with random character
+			nextAction = Action.Interact;
+			GameObject interactChar = charMgr.getRandomCharacter();
+			targetObject = interactChar;
+			moveTo = targetObject.transform.localPosition;
 			moveToRad = 0.5f;
 			break;
 		}
@@ -245,6 +256,9 @@ public class Character : MonoBehaviour {
 	}
 	
 	private void NPCMovement() {
+		if (targetObject != null)
+			moveTo = targetObject.transform.localPosition;
+
 		float distX = Mathf.Abs (moveTo.x - transform.localPosition.x);
 		float distY = Mathf.Abs (moveTo.y - transform.localPosition.y);
 		
@@ -354,6 +368,9 @@ public class Character : MonoBehaviour {
 		if (currentAction != Action.None) {
 			switch (currentAction) {
 			case Action.Wait:
+				legsAnimator.Play ("idle", -1, float.NegativeInfinity);
+				bodyAnimator.Play ("idle", -1, float.NegativeInfinity);
+				headAnimator.Play ("idle", -1, float.NegativeInfinity);
 				pauseTimer = Random.Range (15, 180);
 				break;
 			case Action.Interact:
