@@ -246,6 +246,7 @@ public class Character : MonoBehaviour {
 				charMgr.setAllPaused (2);
 				charMgr.setPlayersPaused (1);
 				gameMgr.setWinner (enemy.player);
+				gameMgr.missPrompt.alpha = 1;
 			}
 		}
 	}

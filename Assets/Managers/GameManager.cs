@@ -24,8 +24,10 @@ public class GameManager : MonoBehaviour {
 
 	// SETUP PHASE //
 	public CanvasGroup setupCanvGroup;
+	public CanvasGroup positionPrompt;
 	public CanvasGroup playCanvGroup;
 	public CanvasGroup endCanvGroup;
+	public CanvasGroup missPrompt;
 	public Toggle p1RdyToggle;
 	public Toggle p2RdyToggle;
 
@@ -158,14 +160,22 @@ public class GameManager : MonoBehaviour {
 				setupCanvGroup.alpha = 0;
 				playerOneReady = false; playerTwoReady = false;
 				p1RdyToggle.isOn = false; p2RdyToggle.isOn = false;
-				if (!Input.GetKey (KeyCode.Q))  gamestate = GameState.WaitForReady;
+				positionPrompt.alpha = 1;
+				if (!Input.GetKey (KeyCode.Q))  {
+					gamestate = GameState.WaitForReady;
+					positionPrompt.alpha = 0;
+				}
 				break;
 			case GameState.RevealTwo:
 				charMgr.revealPlayer (Player.Two);
 				setupCanvGroup.alpha = 0;
 				playerOneReady = false; playerTwoReady = false;
 				p1RdyToggle.isOn = false; p2RdyToggle.isOn = false;
-				if (!Input.GetKey (KeyCode.U)) gamestate = GameState.WaitForReady;
+				positionPrompt.alpha = 1;
+				if (!Input.GetKey (KeyCode.U)) {
+					gamestate = GameState.WaitForReady;
+					positionPrompt.alpha = 0;
+				}
 				break;
 			case GameState.WaitForReady:
 				charMgr.revealPlayer (Player.None);
