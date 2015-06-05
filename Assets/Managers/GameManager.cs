@@ -20,7 +20,14 @@ public class GameManager : MonoBehaviour {
 
 	private GameState gamestate;
 	private Player winner;
-	private bool setup;
+
+	// SETUP PHASE //
+	public CanvasGroup setupCanvGroup;
+	public CanvasGroup playCanvGroup;
+	public Toggle p1RdyToggle;
+	public Toggle p2RdyToggle;
+
+	private bool setupPhase;
 	private bool playerOneReady;
 	private bool playerTwoReady;
 
@@ -36,7 +43,7 @@ public class GameManager : MonoBehaviour {
 
 		situationTimer = Random.Range (5.0f, 10.0f);
 
-		setup = true; playerOneReady = false; playerTwoReady = false;
+		setupPhase = true; playerOneReady = false; playerTwoReady = false;
 	}
 
 	private void updateSituation() {
@@ -63,30 +70,42 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(setup) {
+		if(setupPhase) {
 			switch (gamestate) {
 			case GameState.RevealOne:
 				charMgr.revealPlayer (Player.One);
+				setupCanvGroup.alpha = 0;
 				playerOneReady = false; playerTwoReady = false;
+				p1RdyToggle.isOn = false; p2RdyToggle.isOn = false;
 				if (!Input.GetKey (KeyCode.Q))  gamestate = GameState.WaitForReady;
 				break;
 			case GameState.RevealTwo:
 				charMgr.revealPlayer (Player.Two);
+				setupCanvGroup.alpha = 0;
 				playerOneReady = false; playerTwoReady = false;
+				p1RdyToggle.isOn = false; p2RdyToggle.isOn = false;
 				if (!Input.GetKey (KeyCode.U)) gamestate = GameState.WaitForReady;
 				break;
 			case GameState.WaitForReady:
 				charMgr.revealPlayer (Player.None);
+				setupCanvGroup.alpha = 1;
 				if (Input.GetKeyDown (KeyCode.Q)) gamestate = GameState.RevealOne;
 				if (Input.GetKeyDown (KeyCode.U)) gamestate = GameState.RevealTwo;
 
-				if (Input.GetKeyDown (KeyCode.E)) playerOneReady = true;
-				if (Input.GetKeyDown (KeyCode.O)) playerTwoReady = true;
+				if (Input.GetKeyDown (KeyCode.E)) {
+					if (!playerOneReady) { playerOneReady = true; p1RdyToggle.isOn = true;
+					} else if (playerOneReady) { playerOneReady = false; p1RdyToggle.isOn = false;}
+				}
+				if (Input.GetKeyDown (KeyCode.O)) {
+					if (!playerTwoReady) { playerTwoReady = true; p2RdyToggle.isOn = true;
+					} else if (playerTwoReady) { playerTwoReady = false; p2RdyToggle.isOn = false; }
+				}
 
 				if (playerOneReady && playerTwoReady) gamestate = GameState.Countdown;
 				break;
 			case GameState.Countdown:
-				setup = false;
+				setupPhase = false;
+				setupCanvGroup.alpha = 0; playCanvGroup.alpha = 1;
 				charMgr.revealPlayer (Player.None);
 				countdownTimer = 5;
 				timerText.enabled = true;
@@ -114,7 +133,7 @@ public class GameManager : MonoBehaviour {
 
 			if (winner != Player.None) {
 				gamestate = GameState.End;
-				setup = true;
+				setupPhase = true;
 			}
 		} else if (gamestate == GameState.End) {
 			Vector3 xyDiff;
