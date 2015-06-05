@@ -43,7 +43,7 @@ public class Character : MonoBehaviour {
 	private List<Move> movement; // 0: Left, 1: Up, 2: Right, 3: Down
 	private Move currentMove;
 	private Action currentAction;
-	private int pauseTimer;
+	private float pauseTimer;
 	
 	private int paused;
 	
@@ -53,11 +53,11 @@ public class Character : MonoBehaviour {
 	private Vector2 moveTo; // used for AI's, to move to a point
 	private GameObject targetObject;
 	private float moveToRad; // stop when within certain distance of moveTo
-	private int moveTimer;
+	private float moveTimer;
 
 	// Situation variables
-	private int situationReaction;
-	private int danceReaction;
+	private float situationReaction;
+	private float danceReaction;
 	private bool dancePause;
 
 	public Situation currentSituation;
@@ -74,11 +74,12 @@ public class Character : MonoBehaviour {
 		currentState = AIState.None;
 		moveTo = transform.localPosition;
 		targetObject = null;
-		moveToRad = speed / 30.0f;
+		moveToRad = 0.05f;
+		moveTimer = 0;
 
 		danceReaction = 0;
 		dancePause = false;
-		situationReaction = Random.Range (10,40);
+		situationReaction = Random.Range (0.5f,1.5f);
 		nextSituation = Situation.None;
 		
 		legsAnimator = legs.GetComponent<Animator>();
@@ -217,14 +218,14 @@ public class Character : MonoBehaviour {
 			}
 		}
 
-		pauseTimer = 30;
+		pauseTimer = 1.0f;
 	}
 	
 	private void Attack() {
 		legsAnimator.Play ("use_down", -1, float.NegativeInfinity);
 		bodyAnimator.Play ("use_down", -1, float.NegativeInfinity);
 		headAnimator.Play ("use_down", -1, float.NegativeInfinity);
-		pauseTimer = 30;
+		pauseTimer = 1.0f;
 
 		float dX = enemy.transform.localPosition.x - transform.localPosition.x;
 		float dY = enemy.transform.localPosition.y - transform.localPosition.y;
@@ -321,9 +322,9 @@ public class Character : MonoBehaviour {
 	private void NPCMovement() {
 		if (currentSituation == Situation.Dance) {
 			if (charMgr.danceTimer == 0) {
-				danceReaction = Random.Range (-7,7);
+				danceReaction = Random.Range (-0.2f,0.2f);
 			} else {
-				if (charMgr.danceTimer > 20 + danceReaction) {
+				if (charMgr.danceTimer > 0.5f + danceReaction) {
 					dancePause = true;
 					return;
 				} else
@@ -345,7 +346,7 @@ public class Character : MonoBehaviour {
 		if (distY <= moveToRad && (currentMove == Move.Down || currentMove == Move.Up))
 			axisTargetReached = true;
 		
-		if (moveTimer == 0 || axisTargetReached) {
+		if (moveTimer <= 0 || axisTargetReached) {
 			int movX = 0, movY = 0;
 			currentMove = Move.None;
 			
@@ -393,25 +394,22 @@ public class Character : MonoBehaviour {
 			}
 			
 			// SET ACTION TIMER TO A RANDOM VALUE UNDER WHAT IS NEEDED
-			moveTimer = Random.Range (15, 180);
+			moveTimer = Random.Range (0.5f, 2.0f);
 		} else
-			moveTimer--;
+			moveTimer -= Time.deltaTime;
 	}
 	private void NPCSituation() {
 		if (currentSituation != nextSituation) {
 			if (situationReaction <= 0) {
 				currentSituation = nextSituation;
 				dancePause = false;
-
-				situationReaction = 0;
 			} else
-				situationReaction--;
+				situationReaction -= Time.deltaTime;
 		}
-		print (currentSituation);
 	}
 
 	public void setSituation(Situation sit) {
-		situationReaction = Random.Range (30, 90);
+		situationReaction = Random.Range (0.2f, 1.5f);
 		nextSituation = sit;
 	}
 
@@ -450,7 +448,7 @@ public class Character : MonoBehaviour {
 				if (headAnimator.speed != 0) headAnimator.speed = 0;
 			}
 
-			pauseTimer--;
+			pauseTimer -= Time.deltaTime;
 			return;
 		} else {
 			if (legsAnimator.speed != 1) legsAnimator.speed = 1;
@@ -465,7 +463,7 @@ public class Character : MonoBehaviour {
 				legsAnimator.Play ("idle", -1, float.NegativeInfinity);
 				bodyAnimator.Play ("idle", -1, float.NegativeInfinity);
 				headAnimator.Play ("idle", -1, float.NegativeInfinity);
-				pauseTimer = Random.Range (15, 180);
+				pauseTimer = Random.Range (0.5f, 3.0f);
 				break;
 			case Action.Interact:
 				Interact ();

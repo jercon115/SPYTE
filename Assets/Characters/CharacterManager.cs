@@ -134,8 +134,8 @@ public class CharacterManager : MonoBehaviour {
 	void Update () {
 		// Always update danceTimer, for those that are late to reacting to situation
 		if (danceTimer <= 0) {
-			danceTimer = 30;
+			danceTimer = 1.0f;
 		} else
-			danceTimer--;
+			danceTimer -= Time.deltaTime;
 	}
 }

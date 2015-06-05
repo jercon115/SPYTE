@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour {
 	public Text situationText;
 		
 	private float countdownTimer;
-	private int situationTimer;
+	private float situationTimer;
 
 	private GameState gamestate;
 	private Player winner;
@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour {
 		countdownTimer = 150;
 		timerText.enabled = false;
 
-		situationTimer = Random.Range (150, 300);
+		situationTimer = Random.Range (5.0f, 10.0f);
 
 		setup = true; playerOneReady = false; playerTwoReady = false;
 	}
@@ -50,15 +50,15 @@ public class GameManager : MonoBehaviour {
 					charMgr.changeSituation(Situation.Dance);
 					break;
 				}
-				situationTimer = Random.Range (150, 450);
+				situationTimer = Random.Range (5.0f, 15.0f);
 			} else {
 				situationText.text = "None";
 				charMgr.changeSituation(Situation.None);
 
-				situationTimer = Random.Range (150, 300);
+				situationTimer = Random.Range (5.0f, 10.0f);
 			}
 		} else
-			situationTimer--;
+			situationTimer -= Time.deltaTime;
 	}
 
 	// Update is called once per frame
