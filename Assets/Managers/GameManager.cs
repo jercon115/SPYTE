@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour {
 		gamestate = GameState.WaitForReady;
 		winner = Player.None;
 
-		countdownTimer = 150;
+		countdownTimer = 5;
 		timerText.enabled = false;
 
 		situationTimer = Random.Range (5.0f, 10.0f);
@@ -51,10 +51,14 @@ public class GameManager : MonoBehaviour {
 			situationTimer = 0;
 
 			if (charMgr.currentSituation == Situation.None) {
-				switch(Random.Range (0,1)) {
+				switch(Random.Range (0,2)) {
 				case 0:
 					situationText.text = "Dance";
 					charMgr.changeSituation(Situation.Dance);
+					break;
+				case 1:
+					situationText.text = "Fireworks";
+					charMgr.changeSituation(Situation.Fireworks);
 					break;
 				}
 				situationTimer = Random.Range (5.0f, 15.0f);

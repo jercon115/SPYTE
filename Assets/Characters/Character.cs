@@ -287,27 +287,37 @@ public class Character : MonoBehaviour {
 	}
 	
 	private void NPCNext() {
-		switch (Random.Range (0, 3)) {
-		case 0: // Wait at a random point
+		if (currentSituation == Situation.Fireworks) {
 			nextAction = Action.Wait;
 			targetObject = null;
-			moveTo = new Vector2 (Random.Range (-7.0f, 7.0f), Random.Range (-3.0f, 3.0f));
-			moveToRad = speed / 30.0f;
-			break;
-		case 1: // Interact with random object
-			nextAction = Action.Interact;
-			GameObject interactObj = charMgr.getRandomObject();
-			targetObject = interactObj;
-			moveTo = targetObject.transform.localPosition;
-			moveToRad = 0.5f;
-			break;
-		case 2: // Interact with random character
-			nextAction = Action.Interact;
-			GameObject interactChar = charMgr.getRandomCharacter();
-			targetObject = interactChar;
-			moveTo = targetObject.transform.localPosition;
-			moveToRad = 0.5f;
-			break;
+			if (transform.localPosition.y < 2.0f) {
+				moveTo = new Vector2 (transform.localPosition.x + Random.Range (-0.5f, 0.5f), Random.Range (2.0f, 3.0f));
+			} else
+				moveTo = new Vector2 (Random.Range (-7.0f, 7.0f), Random.Range (2.0f, 3.0f));
+			moveToRad = 0.05f;
+		} else {
+			switch (Random.Range (0, 3)) {
+			case 0: // Wait at a random point
+				nextAction = Action.Wait;
+				targetObject = null;
+				moveTo = new Vector2 (Random.Range (-7.0f, 7.0f), Random.Range (-3.0f, 3.0f));
+				moveToRad = 0.05f;
+				break;
+			case 1: // Interact with random object
+				nextAction = Action.Interact;
+				GameObject interactObj = charMgr.getRandomObject ();
+				targetObject = interactObj;
+				moveTo = targetObject.transform.localPosition;
+				moveToRad = 0.5f;
+				break;
+			case 2: // Interact with random character
+				nextAction = Action.Interact;
+				GameObject interactChar = charMgr.getRandomCharacter ();
+				targetObject = interactChar;
+				moveTo = targetObject.transform.localPosition;
+				moveToRad = 0.5f;
+				break;
+			}
 		}
 
 		// Add a little delay before moving
@@ -407,6 +417,11 @@ public class Character : MonoBehaviour {
 			if (situationReaction <= 0) {
 				currentSituation = nextSituation;
 				dancePause = false;
+
+				if (currentSituation == Situation.Fireworks) {
+					moveTimer = 0.0f;
+					currentState = AIState.None;
+				}
 			} else
 				situationReaction -= Time.deltaTime;
 		}
@@ -470,7 +485,8 @@ public class Character : MonoBehaviour {
 				legsAnimator.Play ("idle", -1, float.NegativeInfinity);
 				bodyAnimator.Play ("idle", -1, float.NegativeInfinity);
 				headAnimator.Play ("idle", -1, float.NegativeInfinity);
-				pauseTimer = Random.Range (0.5f, 3.0f);
+				currentMove = Move.None;
+				moveTimer = Random.Range (0.5f, 3.0f);
 				break;
 			case Action.Interact:
 				Interact ();
