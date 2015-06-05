@@ -7,15 +7,17 @@ public enum Situation {None, Dance, Fireworks};
 
 public class GameManager : MonoBehaviour {
 
-	enum GameState { WaitForReady, RevealOne, RevealTwo, Countdown, Play, End, Restart};
+	enum GameState { WaitForReady, RevealOne, RevealTwo, Countdown, Play, End};
 	
 	public CharacterManager charMgr;
 
 	public Camera cam;
 	public Text timerText;
+	public Text gameTimerText;
 		
 	private float countdownTimer;
 	private float situationTimer;
+	private float gameTimer;
 
 	private GameState gamestate;
 	private Player winner;
@@ -63,7 +65,9 @@ public class GameManager : MonoBehaviour {
 
 		countdownTimer = 5;
 		fireworksTimer = 0.0f;
+		gameTimer = 90;
 		timerText.enabled = false;
+		gameTimerText.enabled = false;
 
 		situationTimer = Random.Range (5.0f, 10.0f);
 
@@ -187,12 +191,6 @@ public class GameManager : MonoBehaviour {
 				countdownTimer = 5;
 				timerText.enabled = true;
 				break;
-			case GameState.Restart:
-				if (winner == Player.One) {
-					Application.LoadLevel ("Player1Wins");
-				} else
-					Application.LoadLevel ("Player2Wins");
-				break;
 			}
 		}
 
@@ -210,25 +208,40 @@ public class GameManager : MonoBehaviour {
 		} else if (gamestate == GameState.Play) {
 			updateSituation ();
 
-			if (winner != Player.None) {
+			// Game timer
+			if (!gameTimerText.enabled) gameTimerText.enabled = true;
+			gameTimerText.text = Mathf.CeilToInt (gameTimer).ToString ();
+			gameTimer -= Time.deltaTime;
+
+			if (winner != Player.None || gameTimer <= 0) {
 				gamestate = GameState.End;
-				setupPhase = true;
+				if (winner == Player.None) charMgr.setAllPaused (2);
 			}
 		} else if (gamestate == GameState.End) {
 			playCanvGroup.alpha = 0; endCanvGroup.alpha = 1;
 
-			Vector3 xyDiff;
-			if (winner == Player.One) {
-				xyDiff = (charMgr.Two.transform.localPosition - cam.transform.localPosition);
-			} else
-				xyDiff = (charMgr.One.transform.localPosition - cam.transform.localPosition);
-			xyDiff.Scale (new Vector3(1.0f,1.0f,0.0f));
-			cam.transform.Translate (xyDiff*0.03f);
+			if (winner != Player.None) {
+				Vector3 xyDiff;
+				if (winner == Player.One) {
+					xyDiff = (charMgr.Two.transform.localPosition - cam.transform.localPosition);
+				} else
+					xyDiff = (charMgr.One.transform.localPosition - cam.transform.localPosition);
+				xyDiff.Scale (new Vector3(1.0f,1.0f,0.0f));
+				cam.transform.Translate (xyDiff*0.03f);
 
-			cam.orthographicSize += (4.0f - cam.orthographicSize)*0.03f;
+				cam.orthographicSize += (4.0f - cam.orthographicSize)*0.03f;
+			}
 
-			if (Input.anyKeyDown)
-				gamestate = GameState.Restart;
+			if (Input.anyKeyDown) {
+				if (winner == Player.One) {
+					Application.LoadLevel ("Player1Wins");
+				} else if (winner == Player.Two) {
+					Application.LoadLevel ("Player2Wins");
+				} else {
+					print ("DRAW!!!");
+					Application.LoadLevel ("Draw");
+				}
+			}
 		}
 	}
 
