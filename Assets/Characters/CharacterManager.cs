@@ -16,6 +16,9 @@ public class CharacterManager : MonoBehaviour {
 	public Sprite[] bodySprites;
 	public Sprite[] headSprites;
 
+	public GameObject sadSpeech;
+	public GameObject happySpeech;
+
 	// Use this for initialization
 	void Start () {
 		List<Character> setCharacters = new List<Character>(characters);
@@ -25,7 +28,7 @@ public class CharacterManager : MonoBehaviour {
 				for (int k = 0; k < heads.Length; k++) {
 					int c = Random.Range (0, setCharacters.Count);
 
-					setCharacters[c].setAppearance(legs[i], bodies[j], heads[k]);
+					setCharacters[c].setAppearance(legs[i], bodies[j], heads[k], i, j, k);
 					setCharacters[c].setSprites(legSprites[i], bodySprites[j], headSprites[k]);
 
 					float x = Random.Range (-7.0f,7.0f); float y = Random.Range (-3.0f, 3.0f);

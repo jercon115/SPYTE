@@ -29,9 +29,15 @@ public class Character : MonoBehaviour {
 	public Sprite legSprite;
 	public Sprite bodySprite;
 	public Sprite headSprite;
-	private Animator legsAnimator;
-	private Animator bodyAnimator;
-	private Animator headAnimator;
+	public Animator legsAnimator;
+	public Animator bodyAnimator;
+	public Animator headAnimator;
+
+	[HideInInspector]
+
+	public int legsIndex;
+	public int bodyIndex;
+	public int headIndex;
 	
 	// control variables
 	private List<Move> movement; // 0: Left, 1: Up, 2: Right, 3: Down
@@ -68,16 +74,25 @@ public class Character : MonoBehaviour {
 		legsAnimator.Play ("idle", -1, float.NegativeInfinity);
 		bodyAnimator.Play("idle", -1, float.NegativeInfinity);
 		headAnimator.Play("idle", -1, float.NegativeInfinity);
+
+		legsIndex = 0;
+		bodyIndex = 0;
+		headIndex = 0;
 	}
 	
 	public void setPaused(int newPaused) {
 		paused = newPaused;
 	}
 	
-	public void setAppearance(RuntimeAnimatorController legsCont, RuntimeAnimatorController bodyCont, RuntimeAnimatorController headCont) {
+	public void setAppearance(RuntimeAnimatorController legsCont,
+	                          RuntimeAnimatorController bodyCont,
+	                          RuntimeAnimatorController headCont,
+	                          int legsI, int bodyI, int headI) {
 		legsAnimator.runtimeAnimatorController = legsCont;
-		bodyAnimator.runtimeAnimatorController = bodyCont;;
+		bodyAnimator.runtimeAnimatorController = bodyCont;
 		headAnimator.runtimeAnimatorController = headCont;
+
+		legsIndex = legsI; bodyIndex = bodyI; headIndex = headI;
 	}
 
 	public void setSprites(Sprite legSpr, Sprite bodySpr, Sprite headSpr) {
@@ -124,7 +139,28 @@ public class Character : MonoBehaviour {
 			InteractAnimation (interactObj);
 	}
 
+	public int CompareCharacter(Character you) {
+		int numCorrect = 0;
+
+		if (you.legsIndex == legsIndex) numCorrect++;
+		if (you.bodyIndex == bodyIndex) numCorrect++;
+		if (you.headIndex == headIndex) numCorrect++;
+
+		return numCorrect;
+	}
+
 	private void InteractCharacter(Character interactChar) {
+		bool happy;
+		if (player != Player.None) {
+			happy = (enemy.CompareCharacter (interactChar) >= 2);
+		} else
+			happy = (Random.Range (0, 2) == 1);
+
+		if (happy) {
+			Instantiate (charMgr.happySpeech, transform.localPosition + new Vector3(0.0f, 1.3f), Quaternion.identity);
+		} else
+			Instantiate (charMgr.sadSpeech, transform.localPosition + new Vector3(0.0f, 1.3f), Quaternion.identity);
+
 		InteractAnimation(interactChar.gameObject);
 	}
 
