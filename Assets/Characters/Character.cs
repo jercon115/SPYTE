@@ -440,10 +440,8 @@ public class Character : MonoBehaviour {
 
 		// Controls
 		transform.Translate (new Vector3 (0.0f, 0.0f, transform.localPosition.y - transform.localPosition.z));
-		
-		if (player != Player.None) {
-			PlayerMovement (); PlayerAction ();
-		}
+
+		if (player != Player.None) PlayerMovement ();
 
 		// paused = 1 (paused), paused = 2 (frozen)
 		if (paused > 0 || pauseTimer > 0) {
@@ -463,8 +461,10 @@ public class Character : MonoBehaviour {
 			if (headAnimator.speed != 1) headAnimator.speed = 1;
 		}
 
-		// AI
-		if (player == Player.None) {
+		if (player != Player.None) {
+			PlayerAction ();
+		} else {
+			// AI
 			switch(currentState) {
 			case AIState.None:
 				NPCNext ();
