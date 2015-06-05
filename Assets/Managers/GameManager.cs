@@ -156,15 +156,11 @@ public class GameManager : MonoBehaviour {
 		winner = newWinner;
 	}
 
-	public void SetSceneGame () {
-		Application.LoadLevel (0);
+	public void SetScene (string scene) {
+		Application.LoadLevel (scene);
 	}
-	
-	public void SetScenePlayer1Wins () {
-		Application.LoadLevel ("Player1Wins");
-	}
-	
-	public void SetScenePlayer2Wins () {
-		Application.LoadLevel ("Player2Wins");
+
+	public void SetScene (int scene) {
+		Application.LoadLevel (scene);
 	}
 }
