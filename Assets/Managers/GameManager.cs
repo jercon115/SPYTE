@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour {
 	// SETUP PHASE //
 	public CanvasGroup setupCanvGroup;
 	public CanvasGroup playCanvGroup;
+	public CanvasGroup endCanvGroup;
 	public Toggle p1RdyToggle;
 	public Toggle p2RdyToggle;
 
@@ -140,6 +141,8 @@ public class GameManager : MonoBehaviour {
 				setupPhase = true;
 			}
 		} else if (gamestate == GameState.End) {
+			playCanvGroup.alpha = 0; endCanvGroup.alpha = 1;
+
 			Vector3 xyDiff;
 			if (winner == Player.One) {
 				xyDiff = (charMgr.Two.transform.localPosition - cam.transform.localPosition);
