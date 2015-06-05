@@ -109,34 +109,34 @@ public class Character : MonoBehaviour {
 	
 	private void Interact() {
 		// Get closest object
-		GameObject interactObj = charMgr.getClosestObject (transform.localPosition.x, transform.localPosition.y, interactRad);
+		Prop interactProp = charMgr.getClosestObject (transform.localPosition.x, transform.localPosition.y, interactRad);
 
 		// Get closest character
 		Character interactChar = charMgr.getClosestCharacter (this, interactRad);
 
 		// Nothing found
-		if (interactObj == null && interactChar == null) return;
+		if (interactProp == null && interactChar == null) return;
 
 		// Only object found
-		if (interactObj != null && interactChar == null) {
-			InteractAnimation (interactObj);
+		if (interactProp != null && interactChar == null) {
+			InteractProp (interactProp);
 			return;
 		}
 
 		// Only character found
-		if (interactObj == null && interactChar != null) {
+		if (interactProp == null && interactChar != null) {
 			InteractCharacter(interactChar);
 			return;
 		}
 		
 		// Both found, use closest one
-		float objDist = (interactObj.transform.localPosition - transform.localPosition).magnitude;
+		float objDist = (interactProp.transform.localPosition - transform.localPosition).magnitude;
 		float charDist = (interactChar.transform.localPosition - transform.localPosition).magnitude;
 
 		if (charDist < objDist) {
 			InteractCharacter(interactChar);
 		} else
-			InteractAnimation (interactObj);
+			InteractProp (interactProp);
 	}
 
 	public int CompareCharacter(Character you) {
@@ -147,6 +147,21 @@ public class Character : MonoBehaviour {
 		if (you.headIndex == headIndex) numCorrect++;
 
 		return numCorrect;
+	}
+
+	private void InteractProp(Prop interactProp) {
+		bool happy;
+		if (player != Player.None) {
+			happy = interactProp.Interact (player);
+		} else
+			happy = (Random.Range (0, 2) == 1);
+		
+		if (happy) {
+			Instantiate (charMgr.happySpeech, transform.localPosition + new Vector3(0.0f, 1.3f), Quaternion.identity);
+		} else
+			Instantiate (charMgr.sadSpeech, transform.localPosition + new Vector3(0.0f, 1.3f), Quaternion.identity);
+		
+		InteractAnimation(interactProp.gameObject);
 	}
 
 	private void InteractCharacter(Character interactChar) {

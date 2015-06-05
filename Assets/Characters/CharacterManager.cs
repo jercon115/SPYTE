@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 public class CharacterManager : MonoBehaviour {
 
-	public Character[] characters;
+	private Character[] characters;
 	public Character One;
 	public Character Two;
 
-	public GameObject[] objects;
+	private Prop[] props;
 
 	public RuntimeAnimatorController[] legs;
 	public RuntimeAnimatorController[] bodies;
@@ -21,6 +21,9 @@ public class CharacterManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		props = (Prop[])FindObjectsOfType (typeof(Prop));
+		characters = (Character[])FindObjectsOfType (typeof(Character));
+
 		List<Character> setCharacters = new List<Character>(characters);
 
 		for (int i = 0; i < legs.Length; i++) {
@@ -64,15 +67,15 @@ public class CharacterManager : MonoBehaviour {
 	}
 
 	public GameObject getRandomObject () {
-		int i = Random.Range (0, objects.Length);
-		return objects [i];
+		int i = Random.Range (0, props.Length);
+		return props [i].gameObject;
 	}
 
-	public GameObject getClosestObject(float x, float y, float radius) {
-		GameObject foundObj = null;
+	public Prop getClosestObject(float x, float y, float radius) {
+		Prop foundObj = null;
 
 		float maxDist = radius;
-		foreach(GameObject obj in objects) {
+		foreach(Prop obj in props) {
 			float dX = obj.transform.localPosition.x - x;
 			float dY = obj.transform.localPosition.y - y;
 			float dist = Mathf.Sqrt (dX*dX + dY*dY);
