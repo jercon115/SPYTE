@@ -57,6 +57,7 @@ public class Character : MonoBehaviour {
 	private GameObject targetObject;
 	private float moveToRad; // stop when within certain distance of moveTo
 	private float moveTimer;
+	private bool noMovePause;
 
 	// Situation variables
 	private float situationReaction;
@@ -80,6 +81,7 @@ public class Character : MonoBehaviour {
 		targetObject = null;
 		moveToRad = 0.05f;
 		moveTimer = 0;
+		noMovePause = false;
 
 		danceReaction = 0;
 		dancePause = false;
@@ -301,6 +303,7 @@ public class Character : MonoBehaviour {
 			targetObject = null;
 			if (transform.localPosition.y < 2.0f) {
 				moveTo = new Vector2 (transform.localPosition.x + Random.Range (-0.5f, 0.5f), Random.Range (2.0f, 3.0f));
+				noMovePause = true;
 			} else
 				moveTo = new Vector2 (Random.Range (-7.0f, 7.0f), Random.Range (2.0f, 3.0f));
 			moveToRad = 0.05f;
@@ -330,8 +333,12 @@ public class Character : MonoBehaviour {
 		}
 
 		// Add a little delay before moving
-		currentMove = Move.None;
-		moveTimer = Random.Range (0.0f, 2.5f);
+		if (noMovePause) {
+			noMovePause = false;
+		} else {
+			currentMove = Move.None;
+			moveTimer = Random.Range (0.0f, 2.5f);
+		}
 
 		currentState = AIState.Go;
 	}
