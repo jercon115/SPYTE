@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour {
 
 	public Camera cam;
 	public Text timerText;
-	public Text situationText;
 		
 	private float countdownTimer;
 	private float situationTimer;
@@ -28,43 +27,96 @@ public class GameManager : MonoBehaviour {
 	public Toggle p1RdyToggle;
 	public Toggle p2RdyToggle;
 
+	public GameObject room;
+	public GameObject windows;
+
+	private SpriteRenderer roomSprite;
+	private SpriteRenderer windowsSprite;
+	private float[] roomRGB; private float[] roomRGBTarg;
+	private float[] windowsRGB;
+	private float fireworksTimer;
 	private bool setupPhase;
 	private bool playerOneReady;
 	private bool playerTwoReady;
 
 	// Use this for initialization
 	void Awake () {
+		roomSprite = room.GetComponent<SpriteRenderer> ();
+		roomRGB = new float[3] {1.0f, 1.0f, 1.0f};
+		roomRGBTarg = new float[3] {1.0f, 1.0f, 1.0f};
+		windowsSprite = windows.GetComponent<SpriteRenderer> ();
+		windowsRGB = new float[3] {0.0f, 0.0f, 0.0f};
+		windowsSprite.color = new Color (0, 0, 0);
+
 		Application.targetFrameRate = 30;
 
 		gamestate = GameState.WaitForReady;
 		winner = Player.None;
 
 		countdownTimer = 5;
+		fireworksTimer = 0.0f;
 		timerText.enabled = false;
 
 		situationTimer = Random.Range (5.0f, 10.0f);
 
 		setupPhase = true; playerOneReady = false; playerTwoReady = false;
+
+
 	}
 
 	private void updateSituation() {
+		if (roomRGB[0] > roomRGBTarg[0]) roomRGB[0] -= 0.05f; if (roomRGB[1] > roomRGBTarg[1]) roomRGB[1] -= 0.05f; if (roomRGB[2] > roomRGBTarg[2]) roomRGB[2] -= 0.05f;
+		if (roomRGB[0] < roomRGBTarg[0]) roomRGB[0] += 0.05f; if (roomRGB[1] < roomRGBTarg[1]) roomRGB[1] += 0.05f; if (roomRGB[2] < roomRGBTarg[2]) roomRGB[2] += 0.05f;
+		roomSprite.color = new Color (roomRGB[0], roomRGB[1], roomRGB[2], 1.0f);
+		if (windowsRGB[0] > 0.0f) windowsRGB[0] -= 0.01f; if (windowsRGB[1] > 0.0f) windowsRGB[1] -= 0.01f; if (windowsRGB[2] > 0.0f) windowsRGB[2] -= 0.01f;
+		windowsSprite.color = new Color (windowsRGB[0], windowsRGB[1], windowsRGB[2], 1.0f);
+
+		if (charMgr.currentSituation == Situation.Dance) {
+			if (charMgr.danceTimer == 1) {
+				if (roomRGBTarg[0] == 0.5f) {
+					roomRGBTarg[0] = 1.0f; roomRGBTarg[1] = 0.5f; roomRGBTarg[2] = 1.0f;
+				} else if (roomRGBTarg[0] == 1.0f) {
+					roomRGBTarg[0] = 0.5f; roomRGBTarg[1] = 0.5f; roomRGBTarg[2] = 1.0f;
+				}
+			}
+		} else {
+			roomRGBTarg[0] = 1.0f; roomRGBTarg[1] = 1.0f; roomRGBTarg[2] = 1.0f;
+		}
+
+		if (charMgr.currentSituation == Situation.Fireworks) {
+			if (fireworksTimer <= 0) {
+				fireworksTimer = Random.Range (0.2f, 1.2f);
+				switch (Random.Range (0, 3)) {
+				case 0:
+					windowsRGB [0] = 1.0f; windowsRGB [1] = 0.0f; windowsRGB [2] = 0.0f;
+					break;
+				case 1:
+					windowsRGB [0] = 0.0f; windowsRGB [1] = 1.0f; windowsRGB [2] = 0.0f;
+					break;
+				case 2:
+					windowsRGB [0] = 0.0f; windowsRGB [1] = 0.0f; windowsRGB [2] = 1.0f;
+					break;
+				}
+			} else
+				fireworksTimer -= Time.deltaTime;
+		} else {
+			fireworksTimer = 0.0f;
+		}
+		
 		if (situationTimer <= 0) {
 			situationTimer = 0;
 
 			if (charMgr.currentSituation == Situation.None) {
 				switch(Random.Range (0,2)) {
 				case 0:
-					situationText.text = "Dance";
 					charMgr.changeSituation(Situation.Dance);
 					break;
 				case 1:
-					situationText.text = "Fireworks";
 					charMgr.changeSituation(Situation.Fireworks);
 					break;
 				}
 				situationTimer = Random.Range (5.0f, 15.0f);
 			} else {
-				situationText.text = "None";
 				charMgr.changeSituation(Situation.None);
 
 				situationTimer = Random.Range (10.0f, 20.0f);
