@@ -19,10 +19,20 @@ public class CharacterManager : MonoBehaviour {
 	public GameObject sadSpeech;
 	public GameObject happySpeech;
 
+	// Situations
+	public bool dance;
+	public float danceTimer;
+
+	public Situation currentSituation;
+
 	// Use this for initialization
 	void Start () {
 		props = (Prop[])FindObjectsOfType (typeof(Prop));
 		characters = (Character[])FindObjectsOfType (typeof(Character));
+
+		dance = true;
+		danceTimer = 0.0f;
+		currentSituation = Situation.None;
 
 		List<Character> setCharacters = new List<Character>(characters);
 
@@ -109,9 +119,23 @@ public class CharacterManager : MonoBehaviour {
 		
 		return foundChar;
 	}
-	
+
+	public void changeSituation(Situation sit) {
+		danceTimer = 0;
+		currentSituation = sit;
+
+		foreach (Character character in characters) {
+			if (character.player == Player.None)
+				character.setSituation(sit);
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
-		return;
+		// Always update danceTimer, for those that are late to reacting to situation
+		if (danceTimer <= 0) {
+			danceTimer = 30;
+		} else
+			danceTimer--;
 	}
 }

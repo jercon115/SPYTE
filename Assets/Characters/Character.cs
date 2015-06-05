@@ -54,6 +54,14 @@ public class Character : MonoBehaviour {
 	private GameObject targetObject;
 	private float moveToRad; // stop when within certain distance of moveTo
 	private int moveTimer;
+
+	// Situation variables
+	private int situationReaction;
+	private int danceReaction;
+	private bool dancePause;
+
+	public Situation currentSituation;
+	private Situation nextSituation;
 	
 	// Use this for initialization
 	void Awake () {
@@ -67,6 +75,11 @@ public class Character : MonoBehaviour {
 		moveTo = transform.localPosition;
 		targetObject = null;
 		moveToRad = speed / 30.0f;
+
+		danceReaction = 0;
+		dancePause = false;
+		situationReaction = Random.Range (10,40);
+		nextSituation = Situation.None;
 		
 		legsAnimator = legs.GetComponent<Animator>();
 		bodyAnimator = body.GetComponent<Animator>();
@@ -302,9 +315,22 @@ public class Character : MonoBehaviour {
 	private void NPCAction() { 
 		currentAction = nextAction;
 		currentState = AIState.None;
+		targetObject = null;
 	}
 	
 	private void NPCMovement() {
+		if (currentSituation == Situation.Dance) {
+			if (charMgr.danceTimer == 0) {
+				danceReaction = Random.Range (-7,7);
+			} else {
+				if (charMgr.danceTimer > 20 + danceReaction) {
+					dancePause = true;
+					return;
+				} else
+					dancePause = false;
+			}
+		}
+
 		if (targetObject != null)
 			moveTo = targetObject.transform.localPosition;
 
@@ -371,9 +397,28 @@ public class Character : MonoBehaviour {
 		} else
 			moveTimer--;
 	}
-	
+	private void NPCSituation() {
+		if (currentSituation != nextSituation) {
+			if (situationReaction <= 0) {
+				currentSituation = nextSituation;
+				dancePause = false;
+
+				situationReaction = 0;
+			} else
+				situationReaction--;
+		}
+		print (currentSituation);
+	}
+
+	public void setSituation(Situation sit) {
+		situationReaction = Random.Range (30, 90);
+		nextSituation = sit;
+	}
+
 	// Update is called once per frame
 	void Update () {
+		NPCSituation ();
+
 		Rigidbody2D body = GetComponent<Rigidbody2D>();
 
 		// Controls
@@ -433,13 +478,17 @@ public class Character : MonoBehaviour {
 			body.velocity = new Vector2 (0.0f, 0.0f);
 			currentAction = Action.None;
 		}
-		
-		if (currentMove != Move.None) {
+
+		Move move = currentMove;
+		if (dancePause && currentSituation == Situation.Dance)
+			move = Move.None;
+
+		if (move != Move.None) {
 			legsAnimator.Play ("walk", -1, float.NegativeInfinity);
 			bodyAnimator.Play ("walk", -1, float.NegativeInfinity);
 			headAnimator.Play ("walk", -1, float.NegativeInfinity);
 		}
-		switch (currentMove) {
+		switch (move) {
 		case Move.Left:
 			transform.localScale = new Vector3 (-1, 1, 1);
 			body.velocity = new Vector2 (-speed, 0.0f);

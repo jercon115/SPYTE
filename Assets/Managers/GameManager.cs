@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 public enum Player {None, One, Two};
+public enum Situation {None, Dance, Fireworks};
 
 public class GameManager : MonoBehaviour {
 
@@ -12,24 +13,52 @@ public class GameManager : MonoBehaviour {
 
 	public Camera cam;
 	public Text timerText;
+	public Text situationText;
 		
-	private int timer;
+	private int countdownTimer;
+	private int situationTimer;
 
 	private GameState gamestate;
 	private Player winner;
 	private bool pressToContinue;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		Application.targetFrameRate = 30;
+
 		gamestate = GameState.WaitForOne;
 		winner = Player.None;
 
-		timer = 150;
+		countdownTimer = 150;
 		timerText.enabled = false;
+
+		situationTimer = Random.Range (150, 300);
 
 		pressToContinue = true;
 	}
-	
+
+	private void updateSituation() {
+		if (situationTimer <= 0) {
+			situationTimer = 0;
+
+			if (charMgr.currentSituation == Situation.None) {
+				switch(Random.Range (0,1)) {
+				case 0:
+					situationText.text = "Dance";
+					charMgr.changeSituation(Situation.Dance);
+					break;
+				}
+				situationTimer = Random.Range (150, 450);
+			} else {
+				situationText.text = "None";
+				charMgr.changeSituation(Situation.None);
+
+				situationTimer = Random.Range (150, 300);
+			}
+		} else
+			situationTimer--;
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if(Input.anyKeyDown && pressToContinue) {
@@ -47,7 +76,7 @@ public class GameManager : MonoBehaviour {
 			case GameState.Countdown:
 				pressToContinue = false;
 				charMgr.revealPlayer (Player.None);
-				timer = 150;
+				countdownTimer = 150;
 				timerText.enabled = true;
 				break;
 			case GameState.Restart:
@@ -60,15 +89,17 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if (gamestate == GameState.Countdown) {
-			timerText.text = Mathf.CeilToInt (timer/30.0f).ToString ();
-			timer--;
+			timerText.text = Mathf.CeilToInt (countdownTimer/30.0f).ToString ();
+			countdownTimer--;
 
-			if (timer <= 0) {
+			if (countdownTimer <= 0) {
 				timerText.enabled = false;
 				charMgr.setAllPaused (0);
 				gamestate = GameState.Play;
 			}
 		} else if (gamestate == GameState.Play) {
+			updateSituation ();
+
 			if (winner != Player.None) {
 				gamestate = GameState.End;
 				pressToContinue = true;
