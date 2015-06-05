@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour {
 				situationText.text = "None";
 				charMgr.changeSituation(Situation.None);
 
-				situationTimer = Random.Range (5.0f, 10.0f);
+				situationTimer = Random.Range (10.0f, 20.0f);
 			}
 		} else
 			situationTimer -= Time.deltaTime;

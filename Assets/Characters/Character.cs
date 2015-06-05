@@ -310,6 +310,10 @@ public class Character : MonoBehaviour {
 			break;
 		}
 
+		// Add a little delay before moving
+		currentMove = Move.None;
+		moveTimer = Random.Range (0.0f, 2.5f);
+
 		currentState = AIState.Go;
 	}
 	
