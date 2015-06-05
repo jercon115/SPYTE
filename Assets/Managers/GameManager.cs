@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour {
 	public Text timerText;
 	public Text situationText;
 		
-	private int countdownTimer;
+	private float countdownTimer;
 	private int situationTimer;
 
 	private GameState gamestate;
@@ -88,7 +88,7 @@ public class GameManager : MonoBehaviour {
 			case GameState.Countdown:
 				setup = false;
 				charMgr.revealPlayer (Player.None);
-				countdownTimer = 150;
+				countdownTimer = 5;
 				timerText.enabled = true;
 				break;
 			case GameState.Restart:
@@ -101,8 +101,8 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if (gamestate == GameState.Countdown) {
-			timerText.text = Mathf.CeilToInt (countdownTimer/30.0f).ToString ();
-			countdownTimer--;
+			timerText.text = Mathf.CeilToInt (countdownTimer).ToString ();
+			countdownTimer -= Time.deltaTime;
 
 			if (countdownTimer <= 0) {
 				timerText.enabled = false;
