@@ -94,36 +94,66 @@ public class Character : MonoBehaviour {
 		// Get closest object
 		GameObject interactObj = charMgr.getClosestObject (transform.localPosition.x, transform.localPosition.y, interactRad);
 
-		if (interactObj != null) {
-			float dX = interactObj.transform.localPosition.x - transform.localPosition.x;
-			float dY = interactObj.transform.localPosition.y - transform.localPosition.y;
+		// Get closest character
+		Character interactChar = charMgr.getClosestCharacter (this, interactRad);
 
-			if (Mathf.Abs (dX) > Mathf.Abs (dY)) {
-				if (dX < 0) {
-					transform.localScale = new Vector3 (-1, 1, 1);
-				} else
-					transform.localScale = new Vector3 (1, 1, 1);
+		// Nothing found
+		if (interactObj == null && interactChar == null) return;
 
-				legsAnimator.Play ("use_side", -1, float.NegativeInfinity);
-				bodyAnimator.Play ("use_side", -1, float.NegativeInfinity);
-				headAnimator.Play ("use_side", -1, float.NegativeInfinity);
-			} else {
-				if (dY < 0) {
-					legsAnimator.Play ("use_down", -1, float.NegativeInfinity);
-					bodyAnimator.Play ("use_down", -1, float.NegativeInfinity);
-					headAnimator.Play ("use_down", -1, float.NegativeInfinity);
-				} else {
-					legsAnimator.Play ("use_up", -1, float.NegativeInfinity);
-					bodyAnimator.Play ("use_up", -1, float.NegativeInfinity);
-					headAnimator.Play ("use_up", -1, float.NegativeInfinity);
-				}
-			}
-
-			if (player != Player.None) gameMgr.updateClues(interactObj, player);
-
-			pauseTimer = 30;
+		// Only object found
+		if (interactObj != null && interactChar == null) {
+			InteractAnimation (interactObj);
+			return;
 		}
-		return;
+
+		// Only character found
+		if (interactObj == null && interactChar != null) {
+			InteractCharacter(interactChar);
+			return;
+		}
+		
+		// Both found, use closest one
+		float objDist = (interactObj.transform.localPosition - transform.localPosition).magnitude;
+		float charDist = (interactChar.transform.localPosition - transform.localPosition).magnitude;
+
+		if (charDist < objDist) {
+			InteractCharacter(interactChar);
+		} else
+			InteractAnimation (interactObj);
+	}
+
+	private void InteractCharacter(Character interactChar) {
+		InteractAnimation(interactChar.gameObject);
+	}
+
+	private void InteractAnimation(GameObject interactObj) {
+		float dX = interactObj.transform.localPosition.x - transform.localPosition.x;
+		float dY = interactObj.transform.localPosition.y - transform.localPosition.y;
+		
+		if (Mathf.Abs (dX) > Mathf.Abs (dY)) {
+			if (dX < 0) {
+				transform.localScale = new Vector3 (-1, 1, 1);
+			} else
+				transform.localScale = new Vector3 (1, 1, 1);
+			
+			legsAnimator.Play ("use_side", -1, float.NegativeInfinity);
+			bodyAnimator.Play ("use_side", -1, float.NegativeInfinity);
+			headAnimator.Play ("use_side", -1, float.NegativeInfinity);
+		} else {
+			if (dY < 0) {
+				legsAnimator.Play ("use_down", -1, float.NegativeInfinity);
+				bodyAnimator.Play ("use_down", -1, float.NegativeInfinity);
+				headAnimator.Play ("use_down", -1, float.NegativeInfinity);
+			} else {
+				legsAnimator.Play ("use_up", -1, float.NegativeInfinity);
+				bodyAnimator.Play ("use_up", -1, float.NegativeInfinity);
+				headAnimator.Play ("use_up", -1, float.NegativeInfinity);
+			}
+		}
+		
+		if (player != Player.None) gameMgr.updateClues(interactObj, player);
+		
+		pauseTimer = 30;
 	}
 	
 	private void Attack() {
@@ -138,9 +168,9 @@ public class Character : MonoBehaviour {
 		float dist = Mathf.Sqrt (dX * dX + dY * dY);
 		if (dist < 0.8) {
 			enemy.Die();
-			gameMgr.EndGame ();
 			charMgr.setAllPaused (2);
 			charMgr.setPlayersPaused (1);
+			gameMgr.setWinner (player);
 		}
 	}
 

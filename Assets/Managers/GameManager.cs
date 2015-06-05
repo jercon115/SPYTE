@@ -6,10 +6,11 @@ public enum Player {None, One, Two};
 
 public class GameManager : MonoBehaviour {
 
-	enum GameState { WaitForOne, RevealOne, WaitForTwo, RevealTwo, Play, End };
+	enum GameState { WaitForOne, RevealOne, WaitForTwo, RevealTwo, Play, End, Restart};
 	
 	public CharacterManager charMgr;
 
+	public Camera cam;
 	public Text MissionTimerText;
 	public Image MissionImage;
 	public Sprite MissionSprite;
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour {
 	private int PlayerOneClues;
 	private int PlayerTwoClues;
 	private GameState gamestate;
+	private Player winner;
 
 	// Use this for initialization
 	void Start () {
@@ -42,6 +44,7 @@ public class GameManager : MonoBehaviour {
 
 		PlayerOneClues = 0;
 		PlayerTwoClues = 0;
+		winner = Player.None;
 
 		MissionTimer = 1200; MissionFound = false;
 		int RandomMission = Random.Range (0, 10);
@@ -67,8 +70,11 @@ public class GameManager : MonoBehaviour {
 				charMgr.revealPlayer (Player.None);
 				charMgr.setAllPaused(0);
 				break;
-			case GameState.End:
-				charMgr.setAllPaused(2);
+			case GameState.Restart:
+				if (winner == Player.One) {
+					Application.LoadLevel ("Player1Wins");
+				} else
+					Application.LoadLevel ("Player2Wins");
 				break;
 			}
 		}
@@ -76,22 +82,37 @@ public class GameManager : MonoBehaviour {
 		if (gamestate == GameState.Play) {
 			if (MissionTimer > 0) {
 				MissionTimer--;
-				int MissionTimerSeconds = MissionTimer/40;
-				MissionTimerText.text = MissionTimerSeconds.ToString();
+				int MissionTimerSeconds = MissionTimer / 40;
+				MissionTimerText.text = MissionTimerSeconds.ToString ();
 			} else {
-				updateAppearances();
+				updateAppearances ();
 
-				MissionTimer = 1200; MissionFound = false;
+				MissionTimer = 1200;
+				MissionFound = false;
 				int RandomMission = Random.Range (0, 10);
-				Mission.GetComponent<SpriteRenderer> ().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+				Mission.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 1.0f, 1.0f, 1.0f);
 				Mission = Objects [RandomMission];
-				Mission.GetComponent<SpriteRenderer> ().color = new Color(1.0f, 0.5f, 0.5f, 1.0f);
+				Mission.GetComponent<SpriteRenderer> ().color = new Color (1.0f, 0.5f, 0.5f, 1.0f);
 			}
+
+			if (winner != Player.None) {
+				gamestate = GameState.End;
+			}
+		} else if (gamestate == GameState.End) {
+			Vector3 xyDiff;
+			if (winner == Player.One) {
+				xyDiff = (charMgr.One.transform.localPosition - cam.transform.localPosition);
+			} else
+				xyDiff = (charMgr.Two.transform.localPosition - cam.transform.localPosition);
+			xyDiff.Scale (new Vector3(1.0f,1.0f,0.0f));
+			cam.transform.Translate (xyDiff*0.03f);
+
+			cam.orthographicSize += (4.0f - cam.orthographicSize)*0.03f;
 		}
 	}
 
-	public void EndGame() {
-		gamestate = GameState.End;
+	public void setWinner(Player newWinner) {
+		winner = newWinner;
 	}
 
 	public void SetSceneGame () {

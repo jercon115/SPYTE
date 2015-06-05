@@ -81,6 +81,23 @@ public class CharacterManager : MonoBehaviour {
 
 		return foundObj;
 	}
+
+	public Character getClosestCharacter(Character me, float radius) {
+		Character foundChar = null;
+
+		float maxDist = radius;
+		foreach(Character character in characters) {
+			if (character == me) continue; // Skip if it is me
+
+			float dist = (character.transform.localPosition - me.transform.localPosition).magnitude;
+			if (dist < maxDist) {
+				maxDist = dist;
+				foundChar = character;
+			}
+		}
+		
+		return foundChar;
+	}
 	
 	// Update is called once per frame
 	void Update () {
