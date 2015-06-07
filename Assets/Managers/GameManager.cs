@@ -48,6 +48,8 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
+		if (Application.loadedLevelName != "Scene")
+			return;
 		roomSprite = room.GetComponent<SpriteRenderer> ();
 		roomRGB = new float[3] {1.0f, 1.0f, 1.0f};
 		roomRGBTarg = new float[3] {1.0f, 1.0f, 1.0f};
@@ -153,6 +155,9 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if (Application.loadedLevelName != "Scene")
+			return;
+
 		if(setupPhase) {
 			switch (gamestate) {
 			case GameState.RevealOne:

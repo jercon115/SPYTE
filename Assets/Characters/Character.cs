@@ -177,9 +177,9 @@ public class Character : MonoBehaviour {
 			happy = (Random.Range (0, 2) == 1);
 		
 		if (happy) {
-			Instantiate (charMgr.happySpeech, transform.localPosition + new Vector3(0.0f, 1.3f), Quaternion.identity);
+			Instantiate (charMgr.happySpeech, transform.localPosition + new Vector3(0.0f, 2.1f), Quaternion.identity);
 		} else
-			Instantiate (charMgr.sadSpeech, transform.localPosition + new Vector3(0.0f, 1.3f), Quaternion.identity);
+			Instantiate (charMgr.sadSpeech, transform.localPosition + new Vector3(0.0f, 2.1f), Quaternion.identity);
 		
 		InteractAnimation(interactProp.gameObject);
 	}
@@ -192,9 +192,9 @@ public class Character : MonoBehaviour {
 			happy = (Random.Range (0, 2) == 1);
 
 		if (happy) {
-			Instantiate (charMgr.happySpeech, transform.localPosition + new Vector3(0.0f, 1.3f), Quaternion.identity);
+			Instantiate (charMgr.happySpeech, transform.localPosition + new Vector3(0.0f, 2.1f), Quaternion.identity);
 		} else
-			Instantiate (charMgr.sadSpeech, transform.localPosition + new Vector3(0.0f, 1.3f), Quaternion.identity);
+			Instantiate (charMgr.sadSpeech, transform.localPosition + new Vector3(0.0f, 2.1f), Quaternion.identity);
 
 		InteractAnimation(interactChar.gameObject);
 	}
